@@ -27,13 +27,13 @@ wsServer.on("request", (request) => {
   clients[userId] = connection;
   console.log(`connected ${userId} in ${Object.getOwnPropertyNames(clients)}} `);
 
-  connection.on("message", message => {
-    if(message.type === "utf8") console.log(`Received Message`, message.utf8Data);
+  // connection.on("message", message => {
+  //   if(message.type === "utf8") console.log(`Received Message`, message.utf8Data);
 
-    //broadcasting message to all connected clients
-    for(key in clients){
-      clients[key].sendUTF(message.utf8Data);
-      console.log("Send message to ", clients[key])
-    }
-  })
+  //   //broadcasting message to all connected clients
+  //   for(key in clients){
+  //     clients[key].sendUTF(message.utf8Data);
+  //     console.log("Send message to ", clients[key])
+  //   }
+  // })
 })
