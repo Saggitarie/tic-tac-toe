@@ -22,18 +22,29 @@ wsServer.on("request", (request) => {
   let userId = getUniqueID();
 
   console.log((new Date()) + ' Received a new connection from origin ' + request.origin + '.');
-
   const connection = request.accept(null, request.origin);
+  // connection.on("open", () => console.log("opened"));
+  // connection.on("closed", () => console.log("closed"));
   clients[userId] = connection;
   console.log(`connected ${userId} in ${Object.getOwnPropertyNames(clients)}} `);
 
-  // connection.on("message", message => {
-  //   if(message.type === "utf8") console.log(`Received Message`, message.utf8Data);
+  connection.on("message", message => {
+    console.log(`Received Message`, message.utf8Data);
 
-  //   //broadcasting message to all connected clients
-  //   for(key in clients){
-  //     clients[key].sendUTF(message.utf8Data);
-  //     console.log("Send message to ", clients[key])
-  //   }
-  // })
+    });
+
+        //generate a new clientId
+        const clientId = getUniqueID();
+        console.log("New ClientId " + clientId);
+        clients[clientId] = {
+          "connection": connection
+        }
+    
+        const payload = {
+          "method": "connect",
+          "clientId": clientId
+        }
+    
+        // Send Back the client
+        connection.send(JSON.stringify(payload));
 })
