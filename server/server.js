@@ -13,6 +13,23 @@ const wsServer = new webSocketServer({
 
 const clients = {};
 const game = {};
+const board = [
+  [
+    {cellNo: 1, isSelected: false},
+    {cellNo: 2, isSelected: false},
+    {cellNo: 3, isSelected: false}
+  ],
+  [
+    {cellNo: 4, isSelected: false},
+    {cellNo: 5, isSelected: false},
+    {cellNo: 6, isSelected: false}
+  ],
+  [
+    {cellNo: 7, isSelected: false},
+    {cellNo: 8, isSelected: false},
+    {cellNo: 9, isSelected: false}
+  ]
+]
 
 const getUniqueID = () => {
   const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -23,9 +40,7 @@ wsServer.on("request", (request) => {
 
   console.log((new Date()) + ' Received a new connection from origin ' + request.origin + '.');
   const connection = request.accept(null, request.origin);
-  // connection.on("open", () => console.log("opened"));
-  // connection.on("closed", () => console.log("closed"));
-  // clients[userId] = connection;
+
   console.log(`In {${Object.getOwnPropertyNames(clients)}} `);
 
   connection.on("message", message => {
@@ -52,13 +67,11 @@ wsServer.on("request", (request) => {
     }
 
     if(result.method === "join"){
-      console.log("Join");
+      console.log("Join Button Clicked >>>", result.clientId);
 
       const clientId = result.clientId;
       const gameId = result.gameId;
       const activeGame = game[gameId];
-
-      console.log("game object", activeGame);
 
       if(activeGame.clients.length >= 2){
         // Exceeded Max Number of Player
