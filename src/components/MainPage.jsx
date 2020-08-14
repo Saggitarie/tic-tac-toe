@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect, useRef, useContext } from "react";
+import React, { useEffect, useRef, useContext } from "react";
 import {WSContext} from "../context/WSState";
 
 export default function MainPage(){
-  const {clientId, setClientId} = useContext(WSContext);
+  const {clientId, gameId, setClientId, setGameId} = useContext(WSContext);
 
   const client = useRef(null);
 
@@ -11,21 +11,47 @@ export default function MainPage(){
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
 
-      console.log(typeof response.clientId);
-      
+      console.log(JSON.stringify(response.gameId));
       setClientId(response.clientId);
-      console.log(clientId)
+
+      if(JSON.stringify(response.gameId) !== "{}"){
+        const gameId = Object.entries(response.gameId);
+        console.log("GameID >>>>", gameId[0][0]);
+        setGameId(gameId[0][0]);
+      }
   }
   }, []);
 
-  const onActivateGame = () => {
-    console.log(clientId);
+  const onStartGameClick = () => {
     const payLoad = {
       "method": "start",
       "clientId": clientId
     }
 
     client.current.send(JSON.stringify(payLoad));
+
+    client.current.onmessage = (message) => {
+      const response = JSON.parse(message.data);
+
+      console.log("Game Successfull Created with id", response.game.id);
+
+      setGameId(response.game.id);
+    }
+  }
+
+  const onJoinGameClick = () => {
+    const payLoad = {
+      "method": "join",
+      "clientId": clientId,
+      "gameId": gameId
+    }
+
+    client.current.send(JSON.stringify(payLoad));
+
+    client.current.onmessage = (message) => {
+      const response = JSON.parse(message.data);
+      console.log(response);
+    }
   }
 
   return (
@@ -36,7 +62,8 @@ export default function MainPage(){
       <div>
       Tic Tac Toe
       </div>
-      <div onClick={onActivateGame}>START</div>
+      <div onClick={onStartGameClick}>START</div>
+      <div onClick={onJoinGameClick}>JOIN</div>
     </div>
   )
 }

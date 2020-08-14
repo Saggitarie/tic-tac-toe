@@ -1,4 +1,5 @@
 export default (state, action) => {
+  console.log("In Reducer >>>", action);
   switch(action.type){
     case "SET_CLIENT_ID":
       return {...state, clientId: action.payload};
