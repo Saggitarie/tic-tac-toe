@@ -6,7 +6,8 @@ import { useHistory } from "react-router-dom";
 export default function MainPage(){
   const history = useHistory();
 
-  const {clientId, gameId, setClientId, setGameId} = useContext(WSContext);
+  const {clientId, gameId, setClientId, setGameId, 
+    hasActiveGame, toggleActiveGameState} = useContext(WSContext);
 
   const client = useRef(null);
 
@@ -21,7 +22,9 @@ export default function MainPage(){
       if(JSON.stringify(response.gameId) !== "{}"){
         const gameId = Object.entries(response.gameId);
         console.log("GameID >>>>", gameId[0][0]);
+        toggleActiveGameState();
         setGameId(gameId[0][0]);
+
       }
   }
   }, []);
@@ -40,6 +43,7 @@ export default function MainPage(){
       console.log("Game Successfull Created with id", response.game.id);
 
       setGameId(response.game.id);
+      toggleActiveGameState();
     }
   }
 
@@ -68,8 +72,10 @@ export default function MainPage(){
       <div>
       Tic Tac Toe
       </div>
-      <div onClick={onStartGameClick}>START</div>
-      <div onClick={onJoinGameClick}>JOIN</div>
+      {
+      hasActiveGame 
+      ? <div onClick={onJoinGameClick}>JOIN</div>
+      : <div onClick={onStartGameClick}>START</div>} 
     </div>
   )
 }
