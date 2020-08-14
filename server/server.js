@@ -19,21 +19,21 @@ const getUniqueID = () => {
 };
 
 wsServer.on("request", (request) => {
-  let userId = getUniqueID();
+  // let userId = getUniqueID();
 
   console.log((new Date()) + ' Received a new connection from origin ' + request.origin + '.');
   const connection = request.accept(null, request.origin);
   // connection.on("open", () => console.log("opened"));
   // connection.on("closed", () => console.log("closed"));
-  clients[userId] = connection;
-  console.log(`connected ${userId} in ${Object.getOwnPropertyNames(clients)}} `);
+  // clients[userId] = connection;
+  console.log(`In {${Object.getOwnPropertyNames(clients)}} `);
 
   connection.on("message", message => {
     console.log(`Received Message`, message.utf8Data);
 
     });
 
-        //generate a new clientId
+        // Generate new Client ID
         const clientId = getUniqueID();
         console.log("New ClientId " + clientId);
         clients[clientId] = {
