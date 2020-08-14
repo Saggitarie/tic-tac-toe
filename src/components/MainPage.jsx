@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useContext } from "react";
 import {WSContext} from "../context/WSState";
 
+import { useHistory } from "react-router-dom";
+
 export default function MainPage(){
+  const history = useHistory();
+
   const {clientId, gameId, setClientId, setGameId} = useContext(WSContext);
 
   const client = useRef(null);
@@ -51,6 +55,8 @@ export default function MainPage(){
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
       console.log(response);
+
+      history.push("/game");
     }
   }
 
