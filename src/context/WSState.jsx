@@ -1,10 +1,11 @@
 import React, { createContext, useReducer } from "react";
 import WSReducer from "./WSReducer";
-import { SET_CLIENT_ID, SET_GAME_ID } from "./WSTypes";
+import { SET_CLIENT_ID, SET_GAME_ID, HAS_ACTIVE_GAME } from "./WSTypes";
 
 const initialState = {
   clientId: "",
-  gameId: ""
+  gameId: "",
+  hasActiveGame: false
 }
 
 // Create Store
@@ -30,12 +31,20 @@ export const WSProvider = ({children}) => {
     })
   }
 
+  function toggleActiveGameState(){
+    dispatch({
+      type: HAS_ACTIVE_GAME
+    })
+  }
+
   return (
     <WSContext.Provider value={{
       clientId: state.clientId,
       gameId: state.gameId,
+      hasActiveGame: state.hasActiveGame,
       setClientId,
-      setGameId
+      setGameId,
+      toggleActiveGameState
     }}>
       {children}
     </WSContext.Provider>
