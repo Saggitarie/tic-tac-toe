@@ -1,24 +1,26 @@
-import React, { useEffect, useRef } from "react";
-import { w3cwebsocket as W3CWebSocket } from "websocket";
+
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import GamePage from "./components/GamePage";
+import MainPage from "./components/MainPage";
+
+import { WSProvider } from "./context/WSState";
+
 import "./styles/main.scss";
 
 export default () => {
-  const client = useRef(null);
-
-  useEffect(() => {
-    client.current = new W3CWebSocket('ws://localhost:8000');
-    client.current.onopen = () => {
-      console.log("WebSocket Client is Open");
-    };
-
-    client.current.onmessage = (message) => {
-      console.log(message);
-    }
-  }, [])
 
   return (
-    <div>
-      Practical Intro to WebSockets
-    </div>
+    <>
+      <WSProvider>
+        <Router>
+          <Switch>
+          <Route exact path="/" component={MainPage}/>
+          <Route exact path="/game" component={GamePage}/>
+          </Switch>
+        </Router>
+      </WSProvider>
+    </>
   )
 }
