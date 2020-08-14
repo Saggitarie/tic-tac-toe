@@ -1,11 +1,12 @@
 import React from "react";
 
-import GameBoard from "./GameBoard";
+import Cell from "./Cell";
 
 export default function GamePage(){
   return (
     <div>
-      <GameBoard />
+      GamePage
+      <Cell />
     </div>
   )
 }
