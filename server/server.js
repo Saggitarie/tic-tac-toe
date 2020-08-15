@@ -30,6 +30,14 @@ const checkWinningPattern = () => {
   // Check All Winning Pattern
 }
 
+const checkAvailability = (cellNo) => {
+  if(!board[cellNo - 1].isSelected){
+    return true;
+  } 
+
+  return false;
+}
+
 const getUniqueID = () => {
   const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
   return s4() + s4() + '-' + s4();
@@ -112,6 +120,23 @@ wsServer.on("request", (request) => {
       clients[clientId].connection.send(JSON.stringify(payLoad));
     }
 
+    // Update Board After Player Selects Cell
+    if(result.method === "playerMove"){
+      const clientId = result.clientId;
+      const selectedCell = result.cellNo;
+      const gameId = result.gameId;
+
+      if(checkAvailability(selectedCell)){
+        board[selectedCell - 1].isSelected = true;
+        board[selectedCell - 1].clientId = clientId;
+
+        updateGameState();
+        
+      } else {
+        // This Cell is Used. Select a another cell
+      }
+    }
+
     });
 
         // Generate new Client ID
@@ -136,13 +161,12 @@ const updateGameState = () => {
     const games = game[g];
     const payLoad = {
       "method": "update",
-      "game": games
+      "game": games,
+      "board": board
     }
 
     games.clients.forEach(c => {
       clients[c.clientId].connection.send(JSON.stringify(payLoad));
     })
   }
-
-  setTimeout(updateGameState, 500);
 }

@@ -2,11 +2,12 @@ import React from "react";
 
 import Cell from "./Cell";
 
-export default function GamePage(){
+export default function GamePage(props){
   return (
     <div>
-      GamePage
-      <Cell />
+      {props.board.map(cell => {
+        return <Cell key={cell.cellNo} cellNo={cell.cellNo} isSelected={cell.isSelected} clientId={cell.clientId}/>
+      })}
     </div>
   )
 }

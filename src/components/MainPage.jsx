@@ -6,13 +6,15 @@ import { useHistory } from "react-router-dom";
 export default function MainPage(){
   const history = useHistory();
 
-  const {clientId, gameId, setClientId, setGameId, 
-    hasActiveGame, toggleActiveGameState} = useContext(WSContext);
+  const {clientId, gameId, setClientId, setGameId,
+    hasActiveGame, toggleActiveGameState, setWebSocket} = useContext(WSContext);
 
   const client = useRef(null);
 
   useEffect(() => {
     client.current = new WebSocket('ws://localhost:8000');
+    setWebSocket(client);
+
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
 
@@ -24,7 +26,6 @@ export default function MainPage(){
         console.log("GameID >>>>", gameId[0][0]);
         toggleActiveGameState();
         setGameId(gameId[0][0]);
-
       }
   }
   }, []);
