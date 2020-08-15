@@ -9,8 +9,6 @@ export default (state, action) => {
     case "SET_BOARD_INFO":
       return {...state, boardInfo: action.payload};
     case "IS_WINNER":
-      console.log("In Reducer State>>>", state)
-      console.log("In Reducer Action Payload>>>", action.payload);
       return {...state, isWinner: action.payload}
     case "HAS_ACTIVE_GAME":
       return {...state, hasActiveGame: !state.hasActiveGame}

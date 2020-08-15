@@ -6,8 +6,30 @@ import { useHistory } from "react-router-dom";
 import GameBoard from "./GameBoard";
 
 export default function GamePage(){
-const history = useHistory();
-const { websocket, clientId, gameId, isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
+
+  const { websocket, clientId, gameId, isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
+  const history = useHistory();
+
+  useEffect(() => {
+    const payLoad = {
+      "method": "initializeBoard",
+      "clientId": clientId,
+    }
+
+    websocket.current.send(JSON.stringify(payLoad));
+
+    websocket.current.onmessage = (message) => {
+      const response = JSON.parse(message.data);
+
+      if(response.method === "initializeBoard"){
+        setBoardInfo(response.board);
+      }
+
+      if(response.method === "update"){
+        setBoardInfo(response.board);
+      }
+    }
+  },[]);
 
   function validateWinner(){
     if(isWinner === 0){
@@ -41,7 +63,7 @@ const { websocket, clientId, gameId, isWinner, boardInfo, setBoardInfo} = useCon
 
       console.log("New Game Board", response.board)
 
-      if(response.method === "update"){
+      if(response.method === "reset"){
         setBoardInfo(response.board);
       }
     }
@@ -59,29 +81,9 @@ const { websocket, clientId, gameId, isWinner, boardInfo, setBoardInfo} = useCon
     history.push("/");
   }
 
-  useEffect(() => {
-    const payLoad = {
-      "method": "initializeBoard",
-      "clientId": clientId,
-    }
-
-    websocket.current.send(JSON.stringify(payLoad));
-
-    websocket.current.onmessage = (message) => {
-      const response = JSON.parse(message.data);
-
-      if(response.method === "initializeBoard"){
-        setBoardInfo(response.board);
-      }
-
-      if(response.method === "update"){
-        setBoardInfo(response.board);
-      }
-    }
-  }, []);
-
   return (
     <div>
+      {console.log("Called JSX", boardInfo)}
       <div onClick={exitGame}>
         Exit
       </div>
