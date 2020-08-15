@@ -13,23 +13,18 @@ const wsServer = new webSocketServer({
 
 const clients = {};
 const game = {};
-const board = [
+const board = 
   [
     {cellNo: 1, isSelected: false, clientId: ""},
     {cellNo: 2, isSelected: false, clientId: ""},
-    {cellNo: 3, isSelected: false, clientId: ""}
-  ],
-  [
+    {cellNo: 3, isSelected: false, clientId: ""},
     {cellNo: 4, isSelected: false, clientId: ""},
     {cellNo: 5, isSelected: false, clientId: ""},
-    {cellNo: 6, isSelected: false, clientId: ""}
-  ],
-  [
+    {cellNo: 6, isSelected: false, clientId: ""},
     {cellNo: 7, isSelected: false, clientId: ""},
     {cellNo: 8, isSelected: false, clientId: ""},
     {cellNo: 9, isSelected: false, clientId: ""}
-  ]
-]
+];
 
 const checkWinningPattern = () => {
   // Check All Winning Pattern
@@ -103,6 +98,18 @@ wsServer.on("request", (request) => {
       activeGame.clients.forEach(c => {
         clients[c.clientId].connection.send(JSON.stringify(payLoad));
       });
+    }
+
+    // Initialize Board Before Game Starts
+    if(result.method === "initializeBoard"){
+      const clientId = result.clientId;
+
+      const payLoad = {
+        "method": "initializeBoard",
+        "board": board
+      }
+
+      clients[clientId].connection.send(JSON.stringify(payLoad));
     }
 
     });
