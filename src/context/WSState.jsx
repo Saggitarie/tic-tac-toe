@@ -3,9 +3,10 @@ import WSReducer from "./WSReducer";
 import { 
   SET_CLIENT_ID,
   SET_GAME_ID,
-  HAS_ACTIVE_GAME,
   SET_WEBSOCKET,
-  SET_BOARD_INFO 
+  SET_BOARD_INFO,
+  HAS_ACTIVE_GAME,
+  IS_WINNER 
 } from "./WSTypes";
 
 const initialState = {
@@ -13,7 +14,8 @@ const initialState = {
   gameId: "",
   boardInfo: [],
   websocket: null,
-  hasActiveGame: false
+  hasActiveGame: false,
+  isWinner: 0
 }
 
 // Create Store
@@ -25,7 +27,6 @@ export const WSProvider = ({children}) => {
 
   // Actions
   function setClientId(str){
-    console.log(`parameter str  ${str}`)
     dispatch({
       type: SET_CLIENT_ID,
       payload: str
@@ -36,12 +37,6 @@ export const WSProvider = ({children}) => {
     dispatch({
       type: SET_GAME_ID,
       payload: str
-    })
-  }
-
-  function toggleActiveGameState(){
-    dispatch({
-      type: HAS_ACTIVE_GAME
     })
   }
 
@@ -59,6 +54,20 @@ export const WSProvider = ({children}) => {
     })
   }
 
+  function toggleActiveGameState(){
+    dispatch({
+      type: HAS_ACTIVE_GAME
+    })
+  }
+
+  function isWinnerCheck(num){
+    console.log("isWinnerCheck num >>>", num)
+    dispatch({
+      type: IS_WINNER,
+      payload: num
+    })
+  }
+
   return (
     <WSContext.Provider value={{
       clientId: state.clientId,
@@ -66,10 +75,12 @@ export const WSProvider = ({children}) => {
       websocket: state.websocket,
       boardInfo: state.boardInfo,
       hasActiveGame: state.hasActiveGame,
+      isWinner: state.isWinner,
       setClientId,
       setGameId,
       setWebSocket,
       setBoardInfo,
+      isWinnerCheck,
       toggleActiveGameState
     }}>
       {children}

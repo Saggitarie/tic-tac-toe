@@ -5,7 +5,8 @@ import "../styles/main.scss";
 import { useEffect } from "react";
 
 export default function Cell(props){
-  const {websocket, clientId, gameId, boardInfo, setBoardInfo} = useContext(WSContext);
+  const {websocket, clientId, gameId, isWinner,
+         boardInfo, setBoardInfo, isWinnerCheck} = useContext(WSContext);
 
   useEffect(() => {
     websocket.current.onmessage = (message) => {
@@ -16,9 +17,8 @@ export default function Cell(props){
 
         setBoardInfo(response.board);
       }
-    }
-      
-  }, [boardInfo])
+    }     
+  }, [boardInfo, isWinner])
 
   function onSelectCell(){
     const payLoad = {
@@ -37,6 +37,14 @@ export default function Cell(props){
         console.log("Updated ", response);
 
         setBoardInfo(response.board);
+
+        if(response.winner !== "" && response.winner === clientId){
+          isWinnerCheck(1)
+        } 
+
+        if(response.winner !== "" && response.winner !== clientId){
+          isWinnerCheck(2);
+        }
       }
     }
   }

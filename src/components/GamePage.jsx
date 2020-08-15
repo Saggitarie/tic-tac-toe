@@ -1,11 +1,30 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 
 import { WSContext } from "../context/WSState";
 
 import GameBoard from "./GameBoard";
 
 export default function GamePage(){
-const { websocket, clientId, boardInfo, setBoardInfo } = useContext(WSContext);
+const { websocket, clientId, isWinner, isWinnerCheck
+  ,boardInfo, setBoardInfo} = useContext(WSContext);
+
+  function validateWinner(){
+    if(isWinner === 0){
+      return (
+        <div></div>
+      )
+    } else {
+      if(isWinner === 1){
+        return (
+        <div>You are the winner</div>
+        )
+      } else {
+        return (
+        <div>You lost :( </div>
+        )
+      }
+    }
+  }
 
 useEffect(() => {
   const payLoad = {
@@ -30,10 +49,11 @@ useEffect(() => {
 
 useEffect(() => {
   console.log(boardInfo);
-}, [boardInfo]);
+}, [boardInfo, isWinner]);
 
   return (
     <div>
+      {validateWinner()}
       <GameBoard board={boardInfo} />
     </div>
   )

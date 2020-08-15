@@ -13,6 +13,7 @@ const wsServer = new webSocketServer({
 
 const clients = {};
 const game = {};
+let winner = "";
 const board = 
   [
     {cellNo: 1, isSelected: false, clientId: ""},
@@ -25,23 +26,6 @@ const board =
     {cellNo: 8, isSelected: false, clientId: ""},
     {cellNo: 9, isSelected: false, clientId: ""}
 ];
-
-const checkWinningPattern = () => {
-  // Check All Winning Pattern
-}
-
-const checkAvailability = (cellNo) => {
-  if(!board[cellNo - 1].isSelected){
-    return true;
-  } 
-
-  return false;
-}
-
-const getUniqueID = () => {
-  const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-  return s4() + s4() + '-' + s4();
-};
 
 wsServer.on("request", (request) => {
 
@@ -130,13 +114,15 @@ wsServer.on("request", (request) => {
         board[selectedCell - 1].isSelected = true;
         board[selectedCell - 1].clientId = clientId;
 
+        console.log("Has Winner!!!", checkWinningPattern(clientId));
+        console.log("Winner Name!!!", winner);
+
         updateGameState();
-        
+
       } else {
         // This Cell is Used. Select a another cell
       }
     }
-
     });
 
         // Generate new Client ID
@@ -162,7 +148,8 @@ const updateGameState = () => {
     const payLoad = {
       "method": "update",
       "game": games,
-      "board": board
+      "board": board,
+      "winner": winner
     }
 
     games.clients.forEach(c => {
@@ -170,3 +157,63 @@ const updateGameState = () => {
     })
   }
 }
+
+const checkWinningPattern = (activePlayer) => {
+  // Check All Winning Pattern
+  let hasWinner = false;
+
+  // Filter with clientID
+  const playerCells = board.filter(cell => cell.clientId === activePlayer)
+                           .map(cell => cell.cellNo);
+
+  console.log("ActivePlayer has these cells", playerCells)
+  // Check if it has any of these 8 patterns
+    // 1,2,3 
+    if([1,2,3].every(c => playerCells.includes(c))){
+      winner = activePlayer;
+      return !hasWinner;
+    }
+    if([1,4,7].every(c => playerCells.includes(c))){
+      winner = activePlayer;
+      return !hasWinner;
+    }
+    if([4,5,6].every(c => playerCells.includes(c))){
+      winner = activePlayer;
+      return !hasWinner;
+    }
+    if([7,8,9].every(c => playerCells.includes(c))){
+      winner = activePlayer;
+      return !hasWinner;
+    }
+    if([2,5,8].every(c => playerCells.includes(c))){
+      winner = activePlayer;
+      return !hasWinner;
+    }
+    if([3,6,9].every(c => playerCells.includes(c))){
+      winner = activePlayer;
+      return !hasWinner;
+    }
+    if([1,5,9].every(c => playerCells.includes(c))){
+      winner = activePlayer;
+      return !hasWinner;
+    }
+    if([3,5,7].every(c => playerCells.includes(c))){
+      winner = activePlayer;
+      return !hasWinner;
+    }
+
+    return hasWinner;
+}
+
+const checkAvailability = (cellNo) => {
+  if(!board[cellNo - 1].isSelected){
+    return true;
+  } 
+
+  return false;
+}
+
+const getUniqueID = () => {
+  const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  return s4() + s4() + '-' + s4();
+};
