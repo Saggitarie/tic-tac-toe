@@ -16,8 +16,8 @@ export default () => {
       <WSProvider>
         <Router>
           <Switch>
-          <Route exact path="/" component={MainPage}/>
-          <Route exact path="/game" component={GamePage}/>
+            <Route exact path="/" component={MainPage}/>
+            <Route exact path="/game" component={GamePage}/>
           </Switch>
         </Router>
       </WSProvider>

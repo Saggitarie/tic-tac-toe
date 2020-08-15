@@ -16,6 +16,14 @@ export default function Cell(props){
         console.log("Updated ", response);
 
         setBoardInfo(response.board);
+
+        if(response.winner !== "" && response.winner === clientId){
+          isWinnerCheck(1)
+        } 
+
+        if(response.winner !== "" && response.winner !== clientId){
+          isWinnerCheck(2);
+        }
       }
     }     
   }, [boardInfo, isWinner])

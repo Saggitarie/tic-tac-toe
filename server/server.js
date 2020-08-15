@@ -123,6 +123,37 @@ wsServer.on("request", (request) => {
         // This Cell is Used. Select a another cell
       }
     }
+
+    // Reset Game
+    if(result.method === "reset"){
+
+      for(cell of board){
+        console.log("Cell", cell);
+        cell["isSelected"] = false;
+        cell["clientId"] = "";
+      }
+
+      console.log("New Game ", board)
+
+      const payload = {
+        "method": "reset",
+        "board": board,
+      }
+
+      connection.send(JSON.stringify(payload));
+    }
+
+    if(result.method === "exit"){
+      const clientId = result.clientId;
+      const activeGame = game[result.gameId];
+
+      const exitClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
+
+      activeGame.clients.splice(exitClientIdIndex, 1);
+      
+      console.log("game", activeGame.clients);
+      // console.log("game index", activeGame.clients.findIndex(c => c.clientId === clientId));
+    }
     });
 
         // Generate new Client ID
