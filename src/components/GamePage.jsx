@@ -5,6 +5,8 @@ import { useHistory } from "react-router-dom";
 
 import GameBoard from "./GameBoard";
 
+import "../styles/main.scss"
+
 export default function GamePage(){
   const history = useHistory();
 
@@ -50,15 +52,15 @@ export default function GamePage(){
     } else {
       if(isWinner === 1){
         return (
-        <div>You are the winner</div>
+        <div className="gamepage__winner-message">You are the winner</div>
         )
       } else if(isWinner === 2) {
         return (
-        <div>You lost :( Try Again By Pressing Reset Button</div>
+        <div className="gamepage__winner-message">You lost :( Try Again By Pressing Reset Button</div>
         )
       } else {
         return (
-          <div>Draw! Try Again By Pressing Reset Button</div>
+          <div className="gamepage__winner-message">Draw! Try Again By Pressing Reset Button</div>
         )
       }
     }
@@ -141,16 +143,30 @@ export default function GamePage(){
   }
 
   return (
-    <div>
-      <div onClick={exitGame}>
-        Exit
+    <div className="gamepage u-center-text">
+      <div className="gamepage__exit" onClick={exitGame}>
+        <figure className="gamepage__exit__group u-margin-top-tiny">
+            <img src="/logout.svg" alt="Exit Icon" className="gamepage__exit__group--img" />
+            <figcaption className="gamepage__exit__group--text">Exit</figcaption>
+        </figure>
       </div>
       {validateWinner()}
-      {!symbol ? <div>Choose your symbol before playing</div>: null}
-      <div onClick={chooseSymbolCircle}>○</div>
-      <div onClick={chooseSymbolCross}>×</div>
-      <GameBoard board={boardInfo} />
-      {isWinner !== 0 ? <div onClick={resetGame}>RESET</div>:<div></div>}
+      {!symbol ? <div className="gamepage__warning">Choose your symbol before playing</div>: null}
+      <div className="gamepage__symbol u-margin-top-tiny">
+        <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
+          <div className="gamepage__symbol__circle--icon" >○</div>
+          <p className="gamepage__symbol__circle--text">Circle</p>
+        </div>
+        <div className="gamepage__symbol__cross" onClick={chooseSymbolCross}>
+          <div className="gamepage__symbol__cross--icon" >×</div>
+          <p className="gamepage__symbol__cross--text">Cross</p>
+        </div>
+      </div>
+      <div className="gamepage__board">
+        <GameBoard board={boardInfo} />
+      </div>
+
+      {isWinner !== 0 ? <div className="btn-reset u-margin-super-tiny btn-text " onClick={resetGame}>RESET</div>:<div></div>}
     </div>
   )
 }

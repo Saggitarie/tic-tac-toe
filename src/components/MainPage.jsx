@@ -3,6 +3,8 @@ import {WSContext} from "../context/WSState";
 
 import { useHistory } from "react-router-dom";
 
+import "../styles/main.scss";
+
 export default function MainPage(){
   const history = useHistory();
 
@@ -60,17 +62,21 @@ export default function MainPage(){
   }
 
   return (
-    <div>
-      <div>
-        <img src="/tic-tac-toe.svg" />
+    <div className="mainpage u-center-text">
+      <div className="mainpage__logo u-padding-top-medium">
+        <img className="mainpage__logo--img" src="/tic-tac-toe.svg" />
       </div>
-      <div>
-      Tic Tac Toe
+      <div className="mainpage__title u-padding-top-tiny">
+        <p className="mainpage__title--main">Tic Tac Toe</p>
+        <p className="mainpage__title--sub">Ready for a Challenge?</p>
       </div>
-      {
-      hasActiveGame 
-      ? <div onClick={onJoinGameClick}>JOIN</div>
-      : <div onClick={onStartGameClick}>START</div>} 
+      <div className="u-padding-top-medium">
+        {
+        hasActiveGame 
+        ? <div className="btn btn-text" onClick={onJoinGameClick}>JOIN GAME</div>
+        : <div className="btn btn-text" onClick={onStartGameClick}>START GAME</div>
+        } 
+      </div>
     </div>
   )
 }

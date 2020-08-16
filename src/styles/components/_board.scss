@@ -1,0 +1,33 @@
+.board {
+  display: grid;
+
+  grid-template-rows: 200px 200px 200px;
+  grid-template-columns: 200px 200px 200px;
+  // grid-gap: 6rem;
+  align-items: start;
+
+  &__cell {
+    border: 2px solid $color-primary-dark;
+    margin: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 200px;
+    height: 200px;
+
+    &--circle{
+      width: 90%;
+      height: 90%;
+    }
+
+    &--cross{
+      width: 90%;
+      height: 90%;
+    }
+  }
+}
+
+.board__cell{
+
+}

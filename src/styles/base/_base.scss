@@ -14,11 +14,6 @@
   box-sizing: inherit;
 }
 
-/*
-
-    Power of Inheritance (all these settings are inherited by all child elements.)
-    It is a best practice to include font-family you want to apply inside the body element.
-*/
 html {
   //This defines what 1 rem is in this project.
   font-size: 62.5%; // 1 rem = 10px; 10px/16px = 62.5%

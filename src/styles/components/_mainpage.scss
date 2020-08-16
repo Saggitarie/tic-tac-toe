@@ -1,0 +1,25 @@
+.mainpage {
+  &__logo {
+    &--img {
+      width: 20rem;
+    }
+  }
+
+  &__title {
+    &--main {
+      font-size: 9rem;
+      font-family: 'Courgette', cursive;
+      color: $color-quinary;
+
+      @include respond(phone) {
+        font-size: 6rem;
+      }
+    }
+
+    &--sub {
+      font-size: 2.5rem;
+      font-family: 'Courgette', cursive;
+      color: $color-primary-dark;
+    }
+  }
+}
