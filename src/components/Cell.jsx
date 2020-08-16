@@ -13,8 +13,6 @@ export default function Cell(props){
       const response = JSON.parse(message.data);
 
       if(response.method === "update"){
-        console.log("Updated ", response);
-
         setBoardInfo(response.board);
 
         if(response.winner !== "" && response.winner === clientId){
@@ -28,13 +26,11 @@ export default function Cell(props){
         if(response.winner !== "" && response.winner === "Draw"){
           isWinnerCheck(3);
         }
-
       }
     }     
   }, [boardInfo, isWinner])
 
   function onSelectCell(){
-    console.log("Symbol??", symbol);
     const payLoad = {
       "method": "playerMove",
       "clientId": clientId,
@@ -47,11 +43,8 @@ export default function Cell(props){
 
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-      console.log("Update Board >>>>", response);
 
       if(response.method === "update"){
-        console.log("Updated ", response);
-
         setBoardInfo(response.board);
 
         if(response.winner !== "" && response.winner !== "Draw" && response.winner === clientId){
@@ -75,8 +68,6 @@ export default function Cell(props){
       // <p>IsSelected: {String(props.isSelected)}</p>
       // <p>ClientId: {props.clientId}</p>
       // <p>Symbol: {props.symbol}</p> */}
-
-      {console.log(props.symbol)}
       {props.symbol === "Circle" ? 
       (<div>
         <p>CellNo: {props.cellNo}</p>

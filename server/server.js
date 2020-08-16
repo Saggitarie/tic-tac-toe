@@ -184,6 +184,22 @@ wsServer.on("request", (request) => {
       activeGame.clients.splice(exitClientIdIndex, 1);
 
       gameStatus = "stop";
+
+      for(cell of board){
+        cell["isSelected"] = false;
+        cell["clientId"] = "";
+        cell["symbol"] = "";
+      }
+      
+      const payLoad = {
+        "method": "exit",
+        "board": board,
+        "symbol": "reset"
+      }
+  
+      activeGame.clients.forEach(c => {
+        clients[c.clientId].connection.send(JSON.stringify(payLoad));
+      })
     }
 
     // Choose Symbol to Play Game

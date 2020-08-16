@@ -70,7 +70,6 @@ export const WSProvider = ({children}) => {
   }
 
   function isWinnerCheck(num){
-    console.log("isWinnerCheck num >>>", num)
     dispatch({
       type: IS_WINNER,
       payload: num

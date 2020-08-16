@@ -12,12 +12,13 @@ export default function GamePage(){
           isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
 
   useEffect(() => {
+
+    console.log("Triggered");
+
     const payLoad = {
       "method": "initializeBoard",
       "clientId": clientId,
     }
-
-    console.log("Triggered")
 
     websocket.current.send(JSON.stringify(payLoad));
 
@@ -32,6 +33,8 @@ export default function GamePage(){
         setBoardInfo(response.board);
         isWinnerCheck(0);
       }
+
+
 
       if(response.method === "chooseSymbolCircle" || response.method === "chooseSymbolCross"){
         setSymbol(response.symbol);
@@ -73,8 +76,6 @@ export default function GamePage(){
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
 
-      console.log("Received Response After Reset>>>", response)
-
       if(response.method === "update"){
         setBoardInfo(response.board);
         isWinnerCheck(0);
@@ -89,6 +90,16 @@ export default function GamePage(){
       "gameId": gameId
     }
     websocket.current.send(JSON.stringify(payLoad));
+
+    websocket.current.onmessage = (message) => {
+      const response = JSON.parse(message.data);
+
+      if(response.method === "exit"){
+        if(response.symbol === "reset"){
+          setSymbol("");
+        }
+      }
+    }
 
     history.push("/");
   }
