@@ -5,6 +5,7 @@ import {
   SET_GAME_ID,
   SET_WEBSOCKET,
   SET_BOARD_INFO,
+  SET_SYMBOL,
   HAS_ACTIVE_GAME,
   IS_WINNER 
 } from "./WSTypes";
@@ -13,6 +14,7 @@ const initialState = {
   clientId: "",
   gameId: "",
   boardInfo: [],
+  symbol: "",
   websocket: null,
   hasActiveGame: false,
   isWinner: 0
@@ -54,6 +56,13 @@ export const WSProvider = ({children}) => {
     })
   }
 
+  function setSymbol(str){
+    dispatch({
+      type: SET_SYMBOL,
+      payload: str
+    })
+  }
+
   function toggleActiveGameState(){
     dispatch({
       type: HAS_ACTIVE_GAME
@@ -74,12 +83,14 @@ export const WSProvider = ({children}) => {
       gameId: state.gameId,
       websocket: state.websocket,
       boardInfo: state.boardInfo,
+      symbol: state.symbol,
       hasActiveGame: state.hasActiveGame,
       isWinner: state.isWinner,
       setClientId,
       setGameId,
       setWebSocket,
       setBoardInfo,
+      setSymbol,
       isWinnerCheck,
       toggleActiveGameState
     }}>

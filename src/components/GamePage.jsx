@@ -7,7 +7,8 @@ import GameBoard from "./GameBoard";
 
 export default function GamePage(){
 
-  const { websocket, clientId, gameId, isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
+  const { websocket, clientId, gameId, symbol, setSymbol,
+          isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
   const history = useHistory();
 
   useEffect(() => {
@@ -27,6 +28,14 @@ export default function GamePage(){
 
       if(response.method === "update"){
         setBoardInfo(response.board);
+      }
+
+      if(response.method === "chooseSymbolCircle"){
+        setSymbol(response.symbol);
+      }
+
+      if(response.method === "chooseSymbolCross"){
+        setSymbol(response.symbol);
       }
     }
   },[]);
@@ -81,13 +90,55 @@ export default function GamePage(){
     history.push("/");
   }
 
+  function chooseSymbolCircle(){
+    const payLoad = {
+      "method": "chooseSymbolCircle",
+      "clientId": clientId,
+      "gameId": gameId
+    }
+
+    websocket.current.send(JSON.stringify(payLoad));
+
+    websocket.current.onmessage = (message) => {
+      const response = JSON.parse(message.data);
+
+      console.log("ChooseSymbolCircle Response>>>", response);
+
+      if(response.method === "chooseSymbolCircle"){
+        setSymbol(response.symbol);
+      }
+    }
+  }
+
+  function chooseSymbolCross(){
+    const payLoad = {
+      "method": "chooseSymbolCross",
+      "clientId": clientId,
+      "gameId": gameId
+    }
+
+    websocket.current.send(JSON.stringify(payLoad));
+
+    websocket.current.onmessage = (message) => {
+      const response = JSON.parse(message.data);
+
+      console.log("ChooseSymbolCross Response>>>", response);
+
+      if(response.method === "chooseSymbolCross"){
+        setSymbol(response.symbol);
+      }
+    }
+  }
+
   return (
     <div>
-      {console.log("Called JSX", boardInfo)}
       <div onClick={exitGame}>
         Exit
       </div>
       {validateWinner()}
+      {!symbol ? <div>Choose your symbol</div>: null}
+      <div onClick={chooseSymbolCircle}>○</div>
+      <div onClick={chooseSymbolCross}>×</div>
       <GameBoard board={boardInfo} />
       {isWinner !== 0 ? <div onClick={resetGame}>RESET</div>:<div></div>}
     </div>

@@ -16,20 +16,18 @@ const game = {};
 let winner = "";
 const board = 
   [
-    {cellNo: 1, isSelected: false, clientId: ""},
-    {cellNo: 2, isSelected: false, clientId: ""},
-    {cellNo: 3, isSelected: false, clientId: ""},
-    {cellNo: 4, isSelected: false, clientId: ""},
-    {cellNo: 5, isSelected: false, clientId: ""},
-    {cellNo: 6, isSelected: false, clientId: ""},
-    {cellNo: 7, isSelected: false, clientId: ""},
-    {cellNo: 8, isSelected: false, clientId: ""},
-    {cellNo: 9, isSelected: false, clientId: ""}
+    {cellNo: 1, isSelected: false, clientId: "", symbol: ""},
+    {cellNo: 2, isSelected: false, clientId: "", symbol: ""},
+    {cellNo: 3, isSelected: false, clientId: "", symbol: ""},
+    {cellNo: 4, isSelected: false, clientId: "", symbol: ""},
+    {cellNo: 5, isSelected: false, clientId: "", symbol: ""},
+    {cellNo: 6, isSelected: false, clientId: "", symbol: ""},
+    {cellNo: 7, isSelected: false, clientId: "", symbol: ""},
+    {cellNo: 8, isSelected: false, clientId: "", symbol: ""},
+    {cellNo: 9, isSelected: false, clientId: "", symbol: ""}
 ];
 
 wsServer.on("request", (request) => {
-
-  console.log((new Date()) + ' Received a new connection from origin ' + request.origin + '.');
   const connection = request.accept(null, request.origin);
 
   console.log(`In {${Object.getOwnPropertyNames(clients)}} `);
@@ -69,11 +67,11 @@ wsServer.on("request", (request) => {
         return null;
       }
 
-      const symbol = {"0": "Circle", "1": "Cross"}[activeGame.clients.length];
+      // const symbol = {"0": "Circle", "1": "Cross"}[activeGame.clients.length];
 
       activeGame.clients.push({
         "clientId": clientId,
-        "symbol": symbol
+        "symbol": ""
       });
 
       // Start Game if there are 2 players
@@ -108,19 +106,18 @@ wsServer.on("request", (request) => {
     if(result.method === "playerMove"){
       const clientId = result.clientId;
       const selectedCell = result.cellNo;
-      const gameId = result.gameId;
+      const symbol = result.symbol;
 
       if(checkAvailability(selectedCell)){
         board[selectedCell - 1].isSelected = true;
         board[selectedCell - 1].clientId = clientId;
+        board[selectedCell - 1].symbol = symbol;
 
         console.log("Has Winner!!!", checkWinningPattern(clientId));
         console.log("Winner Name!!!", winner);
 
         updateGameState();
 
-      } else {
-        // This Cell is Used. Select a another cell
       }
     }
 
@@ -143,6 +140,7 @@ wsServer.on("request", (request) => {
       connection.send(JSON.stringify(payload));
     }
 
+    // Exit Game
     if(result.method === "exit"){
       const clientId = result.clientId;
       const activeGame = game[result.gameId];
@@ -154,23 +152,67 @@ wsServer.on("request", (request) => {
       console.log("game", activeGame.clients);
       // console.log("game index", activeGame.clients.findIndex(c => c.clientId === clientId));
     }
+
+    if(result.method === "chooseSymbolCircle"){
+      const clientId = result.clientId;
+      const gameId = result.gameId;
+      const activeGame = game[gameId];
+
+      const symbolClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
+      const symbolArr = activeGame.clients.map(c => c.symbol);
+
+      // Check is Symbol is unused
+      if(symbolArr.findIndex(symbol => symbol === "Circle") === -1){
+        activeGame.clients[symbolClientIdIndex].symbol = "Circle";
+
+        const payLoad = {
+          "method": "chooseSymbolCircle",
+          "symbol": "Circle"
+        }
+
+        const con = clients[clientId].connection;
+        con.send(JSON.stringify(payLoad));
+      }
+    }
+
+    if(result.method === "chooseSymbolCross"){
+      const clientId = result.clientId;
+      const gameId = result.gameId;
+      const activeGame = game[gameId];
+
+      const symbolClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
+      const symbolArr = activeGame.clients.map(c => c.symbol);
+
+            // Check is Symbol is unused
+            if(symbolArr.findIndex(symbol => symbol === "Cross") === -1){
+              activeGame.clients[symbolClientIdIndex].symbol = "Cross";
+      
+              const payLoad = {
+                "method": "chooseSymbolCross",
+                "symbol": "Cross"
+              }
+      
+              const con = clients[clientId].connection;
+              con.send(JSON.stringify(payLoad));
+            }
+    }
     });
 
-        // Generate new Client ID
-        const clientId = getUniqueID();
-        console.log("New ClientId " + clientId);
-        clients[clientId] = {
-          "connection": connection
-        }
-    
-        const payload = {
-          "method": "connect",
-          "clientId": clientId,
-          "gameId": game
-        }
-    
-        // Send Back the client
-        connection.send(JSON.stringify(payload));
+    // Generate new Client ID
+    const clientId = getUniqueID();
+    console.log("New ClientId " + clientId);
+    clients[clientId] = {
+      "connection": connection
+    }
+
+    const payload = {
+      "method": "connect",
+      "clientId": clientId,
+      "gameId": game
+    }
+
+    // Send Back the client
+    connection.send(JSON.stringify(payload));
 });
 
 const updateGameState = () => {

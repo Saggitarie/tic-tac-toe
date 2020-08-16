@@ -5,7 +5,7 @@ import "../styles/main.scss";
 import { useEffect } from "react";
 
 export default function Cell(props){
-  const {websocket, clientId, gameId, isWinner,
+  const {websocket, clientId, gameId, isWinner, symbol,
          boardInfo, setBoardInfo, isWinnerCheck} = useContext(WSContext);
 
   useEffect(() => {
@@ -33,13 +33,15 @@ export default function Cell(props){
       "method": "playerMove",
       "clientId": clientId,
       "cellNo": props.cellNo,
-      "gameId": gameId
+      "gameId": gameId,
+      "symbol": symbol
     }
 
     websocket.current.send(JSON.stringify(payLoad));
 
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
+      console.log("Update Board >>>> , response.board");
 
       if(response.method === "update"){
         console.log("Updated ", response);
@@ -63,6 +65,7 @@ export default function Cell(props){
       <p>CellNo: {props.cellNo}</p>
       <p>IsSelected: {String(props.isSelected)}</p>
       <p>ClientId: {props.clientId}</p>
+      <p>Symbol: {props.symbol}</p>
     </div>
   )
 }
