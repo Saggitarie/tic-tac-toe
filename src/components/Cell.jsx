@@ -24,11 +24,17 @@ export default function Cell(props){
         if(response.winner !== "" && response.winner !== clientId){
           isWinnerCheck(2);
         }
+
+        if(response.winner !== "" && response.winner === "Draw"){
+          isWinnerCheck(3);
+        }
+
       }
     }     
   }, [boardInfo, isWinner])
 
   function onSelectCell(){
+    console.log("Symbol??", symbol);
     const payLoad = {
       "method": "playerMove",
       "clientId": clientId,
@@ -48,12 +54,16 @@ export default function Cell(props){
 
         setBoardInfo(response.board);
 
-        if(response.winner !== "" && response.winner === clientId){
+        if(response.winner !== "" && response.winner !== "Draw" && response.winner === clientId){
           isWinnerCheck(1)
         } 
 
-        if(response.winner !== "" && response.winner !== clientId){
+        if(response.winner !== "" && response.winner !== "Draw" && response.winner !== clientId){
           isWinnerCheck(2);
+        }
+
+        if(response.winner !== "" && response.winner === "Draw"){
+          isWinnerCheck(3);
         }
       }
     }
@@ -62,10 +72,23 @@ export default function Cell(props){
   console.log("In Cell", props);
   return (
     <div onClick={onSelectCell} className="temp-border">
-      <p>CellNo: {props.cellNo}</p>
-      <p>IsSelected: {String(props.isSelected)}</p>
-      <p>ClientId: {props.clientId}</p>
-      <p>Symbol: {props.symbol}</p>
+      {/* <p>CellNo: {props.cellNo}</p>
+      // <p>IsSelected: {String(props.isSelected)}</p>
+      // <p>ClientId: {props.clientId}</p>
+      // <p>Symbol: {props.symbol}</p> */}
+
+      {console.log(props.symbol)}
+      {props.symbol === "Circle" ? 
+      (<div>
+        <p>CellNo: {props.cellNo}</p>
+        <img src="/circle.svg" />
+      </div>) : props.symbol === "Cross" ?
+        (<div>
+          <p>CellNo: {props.cellNo}</p>
+          <img src="/cross.svg" />  
+        </div>):
+        <p>CellNo: {props.cellNo}</p>
+      }
     </div>
   )
 }

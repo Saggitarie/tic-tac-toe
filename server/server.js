@@ -114,10 +114,17 @@ wsServer.on("request", (request) => {
         board[selectedCell - 1].symbol = symbol;
 
         console.log("Has Winner!!!", checkWinningPattern(clientId));
-        console.log("Winner Name!!!", winner);
+
+        let isSelectedArr = board.map(cell => cell.isSelected);
+
+        if(isSelectedArr.every(e => e === true)){
+          console.log("Is Draw")
+          winner = "Draw"
+        }
+
+        console.log("Is Draw?? After Check", isSelectedArr);
 
         updateGameState();
-
       }
     }
 
@@ -134,12 +141,6 @@ wsServer.on("request", (request) => {
 
       console.log("New Game ", board)
 
-      // const payload = {
-      //   "method": "reset",
-      //   "board": board,
-      // }
-
-      // connection.send(JSON.stringify(payload));
       updateGameState();
     }
 

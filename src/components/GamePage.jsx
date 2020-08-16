@@ -7,7 +7,7 @@ import GameBoard from "./GameBoard";
 
 export default function GamePage(){
 
-  const { websocket, clientId, gameId, symbol, setSymbol,
+  const { websocket, clientId, gameId, symbol, setSymbol, isWinnerCheck,
           isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
   const history = useHistory();
 
@@ -50,9 +50,13 @@ export default function GamePage(){
         return (
         <div>You are the winner</div>
         )
-      } else {
+      } else if(isWinner === 2) {
         return (
         <div>You lost :( </div>
+        )
+      } else {
+        return (
+          <div>Draw</div>
         )
       }
     }
@@ -72,8 +76,9 @@ export default function GamePage(){
 
       console.log("New Game Board", response.board)
 
-      if(response.method === "reset"){
+      if(response.method === "update"){
         setBoardInfo(response.board);
+        isWinnerCheck(0);
       }
     }
   }
