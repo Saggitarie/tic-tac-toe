@@ -6,10 +6,10 @@ import { useHistory } from "react-router-dom";
 import GameBoard from "./GameBoard";
 
 export default function GamePage(){
+  const history = useHistory();
 
   const { websocket, clientId, gameId, symbol, setSymbol, isWinnerCheck,
           isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
-  const history = useHistory();
 
   useEffect(() => {
     const payLoad = {
@@ -22,19 +22,11 @@ export default function GamePage(){
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
 
-      if(response.method === "initializeBoard"){
+      if(response.method === "initializeBoard" || response.method === "update"){
         setBoardInfo(response.board);
       }
 
-      if(response.method === "update"){
-        setBoardInfo(response.board);
-      }
-
-      if(response.method === "chooseSymbolCircle"){
-        setSymbol(response.symbol);
-      }
-
-      if(response.method === "chooseSymbolCross"){
+      if(response.method === "chooseSymbolCircle" || response.method === "chooseSymbolCross"){
         setSymbol(response.symbol);
       }
     }
@@ -141,7 +133,7 @@ export default function GamePage(){
         Exit
       </div>
       {validateWinner()}
-      {!symbol ? <div>Choose your symbol</div>: null}
+      {!symbol ? <div>Choose your symbol before playing</div>: null}
       <div onClick={chooseSymbolCircle}>○</div>
       <div onClick={chooseSymbolCross}>×</div>
       <GameBoard board={boardInfo} />

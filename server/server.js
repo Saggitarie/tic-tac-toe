@@ -30,11 +30,7 @@ const board =
 wsServer.on("request", (request) => {
   const connection = request.accept(null, request.origin);
 
-  console.log(`In {${Object.getOwnPropertyNames(clients)}} `);
-
   connection.on("message", message => {
-    console.log(`Received Message`, message.utf8Data);
-
     const result = JSON.parse(message.utf8Data);
 
     if(result.method === "start"){
@@ -56,8 +52,6 @@ wsServer.on("request", (request) => {
     }
 
     if(result.method === "join"){
-      console.log("Join Button Clicked >>>", result.clientId);
-
       const clientId = result.clientId;
       const gameId = result.gameId;
       const activeGame = game[gameId];
@@ -66,8 +60,6 @@ wsServer.on("request", (request) => {
         // Exceeded Max Number of Player
         return null;
       }
-
-      // const symbol = {"0": "Circle", "1": "Cross"}[activeGame.clients.length];
 
       activeGame.clients.push({
         "clientId": clientId,
@@ -113,24 +105,18 @@ wsServer.on("request", (request) => {
         board[selectedCell - 1].clientId = clientId;
         board[selectedCell - 1].symbol = symbol;
 
-        console.log("Has Winner!!!", checkWinningPattern(clientId));
-
         let isSelectedArr = board.map(cell => cell.isSelected);
+        checkWinningPattern(clientId);
 
         if(isSelectedArr.every(e => e === true)){
-          console.log("Is Draw")
           winner = "Draw"
         }
-
-        console.log("Is Draw?? After Check", isSelectedArr);
-
         updateGameState();
       }
     }
 
     // Reset Game
     if(result.method === "reset"){
-
       winner = "";
 
       for(cell of board){
@@ -138,9 +124,6 @@ wsServer.on("request", (request) => {
         cell["clientId"] = "";
         cell["symbol"] = "";
       }
-
-      console.log("New Game ", board)
-
       updateGameState();
     }
 
@@ -152,11 +135,9 @@ wsServer.on("request", (request) => {
       const exitClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
 
       activeGame.clients.splice(exitClientIdIndex, 1);
-      
-      console.log("game", activeGame.clients);
-      // console.log("game index", activeGame.clients.findIndex(c => c.clientId === clientId));
     }
 
+    // Choose Symbol to Play Game
     if(result.method === "chooseSymbolCircle"){
       const clientId = result.clientId;
       const gameId = result.gameId;
@@ -202,9 +183,8 @@ wsServer.on("request", (request) => {
     }
     });
 
-    // Generate new Client ID
+    // Generate ID using GUID
     const clientId = getUniqueID();
-    console.log("New ClientId " + clientId);
     clients[clientId] = {
       "connection": connection
     }
@@ -214,8 +194,6 @@ wsServer.on("request", (request) => {
       "clientId": clientId,
       "gameId": game
     }
-
-    // Send Back the client
     connection.send(JSON.stringify(payload));
 });
 
@@ -292,5 +270,6 @@ const checkAvailability = (cellNo) => {
 
 const getUniqueID = () => {
   const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  
   return s4() + s4() + '-' + s4();
 };
