@@ -14,6 +14,8 @@ const wsServer = new webSocketServer({
 const clients = {};
 const game = {};
 let winner = "";
+let turn = "";
+let gameStatus = "stop";
 const board = 
   [
     {cellNo: 1, isSelected: false, clientId: "", symbol: ""},
@@ -61,6 +63,10 @@ wsServer.on("request", (request) => {
         return null;
       }
 
+      if(!turn){
+        turn = clientId;
+      }
+
       activeGame.clients.push({
         "clientId": clientId,
         "symbol": ""
@@ -68,6 +74,8 @@ wsServer.on("request", (request) => {
 
       // Start Game if there are 2 players
       if(activeGame.clients.length === 2){
+        console.log("Two Players!");
+        gameStatus = "running";
         updateGameState();
       }
 
@@ -97,8 +105,17 @@ wsServer.on("request", (request) => {
     // Update Board After Player Selects Cell
     if(result.method === "playerMove"){
       const clientId = result.clientId;
+      const gameId = result.gameId;
       const selectedCell = result.cellNo;
       const symbol = result.symbol;
+      const activeGame = game[gameId];
+
+      console.log("Gamestatus????", gameStatus)
+      if(gameStatus === "stop") return;
+      console.log("Passed GameStatus")
+
+      if(turn !== clientId) return;
+      console.log("Passed Turn ")
 
       if(checkAvailability(selectedCell)){
         board[selectedCell - 1].isSelected = true;
@@ -110,14 +127,37 @@ wsServer.on("request", (request) => {
 
         if(isSelectedArr.every(e => e === true)){
           winner = "Draw"
+          gameStatus = "stop"
         }
+
+        const activePlayerIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
+
+        if(activePlayerIndex === 0){
+          turn = activeGame.clients[1].clientId;
+        }else{
+          turn = activeGame.clients[0].clientId;
+        }
+
         updateGameState();
       }
     }
 
     // Reset Game
     if(result.method === "reset"){
+      const clientId = result.clientId;
+      const gameId = result.gameId;
+      const activeGame = game[gameId];
+
+      const activePlayerIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
+
+      if(activePlayerIndex === 0){
+        turn = activeGame.clients[1].clientId;
+      }else{
+        turn = activeGame.clients[0].clientId;
+      }
+
       winner = "";
+      gameStatus = "running";
 
       for(cell of board){
         cell["isSelected"] = false;
@@ -135,6 +175,8 @@ wsServer.on("request", (request) => {
       const exitClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
 
       activeGame.clients.splice(exitClientIdIndex, 1);
+
+      gameStatus = "stop";
     }
 
     // Choose Symbol to Play Game
@@ -204,7 +246,8 @@ const updateGameState = () => {
       "method": "update",
       "game": games,
       "board": board,
-      "winner": winner
+      "winner": winner,
+      "turn": turn
     }
 
     games.clients.forEach(c => {
@@ -226,34 +269,42 @@ const checkWinningPattern = (activePlayer) => {
     // 1,2,3 
     if([1,2,3].every(c => playerCells.includes(c))){
       winner = activePlayer;
+      gameStatus = "stop"
       return !hasWinner;
     }
     if([1,4,7].every(c => playerCells.includes(c))){
       winner = activePlayer;
+      gameStatus = "stop"
       return !hasWinner;
     }
     if([4,5,6].every(c => playerCells.includes(c))){
       winner = activePlayer;
+      gameStatus = "stop"
       return !hasWinner;
     }
     if([7,8,9].every(c => playerCells.includes(c))){
       winner = activePlayer;
+      gameStatus = "stop"
       return !hasWinner;
     }
     if([2,5,8].every(c => playerCells.includes(c))){
       winner = activePlayer;
+      gameStatus = "stop"
       return !hasWinner;
     }
     if([3,6,9].every(c => playerCells.includes(c))){
       winner = activePlayer;
+      gameStatus = "stop"
       return !hasWinner;
     }
     if([1,5,9].every(c => playerCells.includes(c))){
       winner = activePlayer;
+      gameStatus = "stop"
       return !hasWinner;
     }
     if([3,5,7].every(c => playerCells.includes(c))){
       winner = activePlayer;
+      gameStatus = "stop"
       return !hasWinner;
     }
 
@@ -270,6 +321,6 @@ const checkAvailability = (cellNo) => {
 
 const getUniqueID = () => {
   const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-  
+
   return s4() + s4() + '-' + s4();
 };

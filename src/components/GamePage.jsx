@@ -17,20 +17,27 @@ export default function GamePage(){
       "clientId": clientId,
     }
 
+    console.log("Triggered")
+
     websocket.current.send(JSON.stringify(payLoad));
 
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
 
-      if(response.method === "initializeBoard" || response.method === "update"){
+      if(response.method === "initializeBoard" ){
         setBoardInfo(response.board);
+      }
+
+      if(response.method === "update"){
+        setBoardInfo(response.board);
+        isWinnerCheck(0);
       }
 
       if(response.method === "chooseSymbolCircle" || response.method === "chooseSymbolCross"){
         setSymbol(response.symbol);
       }
     }
-  },[]);
+  }, []);
 
   function validateWinner(){
     if(isWinner === 0){
@@ -44,11 +51,11 @@ export default function GamePage(){
         )
       } else if(isWinner === 2) {
         return (
-        <div>You lost :( </div>
+        <div>You lost :( Try Again By Pressing Reset Button</div>
         )
       } else {
         return (
-          <div>Draw</div>
+          <div>Draw! Try Again By Pressing Reset Button</div>
         )
       }
     }
@@ -66,7 +73,7 @@ export default function GamePage(){
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
 
-      console.log("New Game Board", response.board)
+      console.log("Received Response After Reset>>>", response)
 
       if(response.method === "update"){
         setBoardInfo(response.board);
@@ -81,7 +88,6 @@ export default function GamePage(){
       "clientId": clientId,
       "gameId": gameId
     }
-
     websocket.current.send(JSON.stringify(payLoad));
 
     history.push("/");
@@ -98,8 +104,6 @@ export default function GamePage(){
 
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-
-      console.log("ChooseSymbolCircle Response>>>", response);
 
       if(response.method === "chooseSymbolCircle"){
         setSymbol(response.symbol);
@@ -118,8 +122,6 @@ export default function GamePage(){
 
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-
-      console.log("ChooseSymbolCross Response>>>", response);
 
       if(response.method === "chooseSymbolCross"){
         setSymbol(response.symbol);

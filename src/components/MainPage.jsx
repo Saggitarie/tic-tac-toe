@@ -17,13 +17,10 @@ export default function MainPage(){
 
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-
-      console.log(JSON.stringify(response.gameId));
       setClientId(response.clientId);
 
       if(JSON.stringify(response.gameId) !== "{}"){
         const gameId = Object.entries(response.gameId);
-        console.log("GameID >>>>", gameId[0][0]);
         toggleActiveGameState();
         setGameId(gameId[0][0]);
       }
@@ -41,8 +38,6 @@ export default function MainPage(){
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
 
-      console.log("Game Successfull Created with id", response.game.id);
-
       setGameId(response.game.id);
       toggleActiveGameState();
     }
@@ -59,7 +54,6 @@ export default function MainPage(){
 
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-      console.log(response);
 
       history.push("/game");
     }

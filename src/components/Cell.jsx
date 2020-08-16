@@ -47,7 +47,7 @@ export default function Cell(props){
 
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-      console.log("Update Board >>>> , response.board");
+      console.log("Update Board >>>>", response);
 
       if(response.method === "update"){
         console.log("Updated ", response);
@@ -69,7 +69,6 @@ export default function Cell(props){
     }
   }
 
-  console.log("In Cell", props);
   return (
     <div onClick={onSelectCell} className="temp-border">
       {/* <p>CellNo: {props.cellNo}</p>
