@@ -40,7 +40,6 @@ wsServer.on("request", (request) => {
       console.log("Game started");
       const clientId = result.clientId;
 
-      console.log("Start: clientId", clientId)
       if(!gameId){
         gameId = getUniqueID();
 
@@ -61,9 +60,6 @@ wsServer.on("request", (request) => {
 
     if(result.method === "join"){
       const clientId = result.clientId;
-      console.log("Join: clientId", clientId)
-      // gameId = result.gameId;
-      console.log("Join: gameId", gameId)
       const activeGame = game[gameId];
 
       if(activeGame.clients.length >= 2){
@@ -74,8 +70,6 @@ wsServer.on("request", (request) => {
       if(!turn){
         turn = clientId;
       }
-
-
 
       activeGame.clients.push({
         "clientId": clientId,
@@ -118,7 +112,6 @@ wsServer.on("request", (request) => {
     // Update Board After Player Selects Cell
     if(result.method === "playerMove"){
       const clientId = result.clientId;
-      // const gameId = result.gameId;
       const selectedCell = result.cellNo;
       const symbol = result.symbol;
       const activeGame = game[gameId];
@@ -160,7 +153,6 @@ wsServer.on("request", (request) => {
     // Reset Game
     if(result.method === "reset"){
       const clientId = result.clientId;
-      // const gameId = result.gameId;
       const activeGame = game[gameId];
 
       const activePlayerIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
@@ -180,7 +172,7 @@ wsServer.on("request", (request) => {
         cell["symbol"] = "";
       }
       updateGameState();
-    }
+    } 
 
     // Exit Game
     if(result.method === "exit"){
@@ -197,16 +189,10 @@ wsServer.on("request", (request) => {
     // Choose Symbol to Play Game
     if(result.method === "chooseSymbolCircle"){
       const clientId = result.clientId;
-      gameId = result.gameId;
       const activeGame = game[gameId];
-
-      console.log("clientId", clientId);
-      console.log(activeGame)
 
       const symbolClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
       const symbolArr = activeGame.clients.map(c => c.symbol);
-
-      console.log("symbolClientIdIndex", symbolClientIdIndex)
 
       // Check is Symbol is unused
       if(symbolArr.findIndex(symbol => symbol === "Circle") === -1){
@@ -224,41 +210,38 @@ wsServer.on("request", (request) => {
 
     if(result.method === "chooseSymbolCross"){
       const clientId = result.clientId;
-      gameId = result.gameId;
       const activeGame = game[gameId];
 
       const symbolClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
       const symbolArr = activeGame.clients.map(c => c.symbol);
 
-      console.log("symbolClientIdIndex", symbolClientIdIndex)
+      // Check is Symbol is unused
+      if(symbolArr.findIndex(symbol => symbol === "Cross") === -1){
+        activeGame.clients[symbolClientIdIndex].symbol = "Cross";
 
-            // Check is Symbol is unused
-            if(symbolArr.findIndex(symbol => symbol === "Cross") === -1){
-              activeGame.clients[symbolClientIdIndex].symbol = "Cross";
-      
-              const payLoad = {
-                "method": "chooseSymbolCross",
-                "symbol": "Cross"
-              }
-      
-              const con = clients[clientId].connection;
-              con.send(JSON.stringify(payLoad));
-            }
-    }
-    });
+        const payLoad = {
+          "method": "chooseSymbolCross",
+          "symbol": "Cross"
+        }
 
-    // Generate ID using GUID
-    const clientId = getUniqueID();
-    clients[clientId] = {
-      "connection": connection
+        const con = clients[clientId].connection;
+        con.send(JSON.stringify(payLoad));
+      }
     }
+  });
 
-    const payload = {
-      "method": "connect",
-      "clientId": clientId,
-      "gameId": game
-    }
-    connection.send(JSON.stringify(payload));
+  // Generate New ClientID using GUID
+  const clientId = getUniqueID();
+  clients[clientId] = {
+    "connection": connection
+  }
+
+  const payload = {
+    "method": "connect",
+    "clientId": clientId,
+    "gameId": game
+  }
+  connection.send(JSON.stringify(payload));
 });
 
 const updateGameState = () => {
@@ -282,55 +265,51 @@ const checkWinningPattern = (activePlayer) => {
   // Check All Winning Pattern
   let hasWinner = false;
 
-  // Filter with clientID
   const playerCells = board.filter(cell => cell.clientId === activePlayer)
                            .map(cell => cell.cellNo);
 
-  console.log("ActivePlayer has these cells", playerCells)
-  // Check if it has any of these 8 patterns
-    // 1,2,3 
-    if([1,2,3].every(c => playerCells.includes(c))){
-      winner = activePlayer;
-      gameStatus = "stop"
-      return !hasWinner;
-    }
-    if([1,4,7].every(c => playerCells.includes(c))){
-      winner = activePlayer;
-      gameStatus = "stop"
-      return !hasWinner;
-    }
-    if([4,5,6].every(c => playerCells.includes(c))){
-      winner = activePlayer;
-      gameStatus = "stop"
-      return !hasWinner;
-    }
-    if([7,8,9].every(c => playerCells.includes(c))){
-      winner = activePlayer;
-      gameStatus = "stop"
-      return !hasWinner;
-    }
-    if([2,5,8].every(c => playerCells.includes(c))){
-      winner = activePlayer;
-      gameStatus = "stop"
-      return !hasWinner;
-    }
-    if([3,6,9].every(c => playerCells.includes(c))){
-      winner = activePlayer;
-      gameStatus = "stop"
-      return !hasWinner;
-    }
-    if([1,5,9].every(c => playerCells.includes(c))){
-      winner = activePlayer;
-      gameStatus = "stop"
-      return !hasWinner;
-    }
-    if([3,5,7].every(c => playerCells.includes(c))){
-      winner = activePlayer;
-      gameStatus = "stop"
-      return !hasWinner;
-    }
+  if([1,2,3].every(c => playerCells.includes(c))){
+    winner = activePlayer;
+    gameStatus = "stop"
+    return !hasWinner;
+  }
+  if([1,4,7].every(c => playerCells.includes(c))){
+    winner = activePlayer;
+    gameStatus = "stop"
+    return !hasWinner;
+  }
+  if([4,5,6].every(c => playerCells.includes(c))){
+    winner = activePlayer;
+    gameStatus = "stop"
+    return !hasWinner;
+  }
+  if([7,8,9].every(c => playerCells.includes(c))){
+    winner = activePlayer;
+    gameStatus = "stop"
+    return !hasWinner;
+  }
+  if([2,5,8].every(c => playerCells.includes(c))){
+    winner = activePlayer;
+    gameStatus = "stop"
+    return !hasWinner;
+  }
+  if([3,6,9].every(c => playerCells.includes(c))){
+    winner = activePlayer;
+    gameStatus = "stop"
+    return !hasWinner;
+  }
+  if([1,5,9].every(c => playerCells.includes(c))){
+    winner = activePlayer;
+    gameStatus = "stop"
+    return !hasWinner;
+  }
+  if([3,5,7].every(c => playerCells.includes(c))){
+    winner = activePlayer;
+    gameStatus = "stop"
+    return !hasWinner;
+  }
 
-    return hasWinner;
+  return hasWinner;
 }
 
 const checkAvailability = (cellNo) => {
