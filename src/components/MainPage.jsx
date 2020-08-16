@@ -6,25 +6,23 @@ import { useHistory } from "react-router-dom";
 export default function MainPage(){
   const history = useHistory();
 
-  const {clientId, gameId, setClientId, setGameId, 
-    hasActiveGame, toggleActiveGameState} = useContext(WSContext);
+  const {clientId, gameId, setClientId, setGameId,
+    hasActiveGame, toggleActiveGameState, setWebSocket} = useContext(WSContext);
 
   const client = useRef(null);
 
   useEffect(() => {
     client.current = new WebSocket('ws://localhost:8000');
+    setWebSocket(client);
+
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-
-      console.log(JSON.stringify(response.gameId));
       setClientId(response.clientId);
 
       if(JSON.stringify(response.gameId) !== "{}"){
         const gameId = Object.entries(response.gameId);
-        console.log("GameID >>>>", gameId[0][0]);
         toggleActiveGameState();
         setGameId(gameId[0][0]);
-
       }
   }
   }, []);
@@ -39,8 +37,6 @@ export default function MainPage(){
 
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-
-      console.log("Game Successfull Created with id", response.game.id);
 
       setGameId(response.game.id);
       toggleActiveGameState();
@@ -58,7 +54,6 @@ export default function MainPage(){
 
     client.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
-      console.log(response);
 
       history.push("/game");
     }
