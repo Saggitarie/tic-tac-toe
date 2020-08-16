@@ -124,20 +124,23 @@ wsServer.on("request", (request) => {
     // Reset Game
     if(result.method === "reset"){
 
+      winner = "";
+
       for(cell of board){
-        console.log("Cell", cell);
         cell["isSelected"] = false;
         cell["clientId"] = "";
+        cell["symbol"] = "";
       }
 
       console.log("New Game ", board)
 
-      const payload = {
-        "method": "reset",
-        "board": board,
-      }
+      // const payload = {
+      //   "method": "reset",
+      //   "board": board,
+      // }
 
-      connection.send(JSON.stringify(payload));
+      // connection.send(JSON.stringify(payload));
+      updateGameState();
     }
 
     // Exit Game
