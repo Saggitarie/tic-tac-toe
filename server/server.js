@@ -110,12 +110,14 @@ wsServer.on("request", (request) => {
       const symbol = result.symbol;
       const activeGame = game[gameId];
 
-      console.log("Gamestatus????", gameStatus)
       if(gameStatus === "stop") return;
-      console.log("Passed GameStatus")
 
       if(turn !== clientId) return;
-      console.log("Passed Turn ")
+
+      // Check if the active player chose their symbol before making their move.
+      const targetPlayer  = activeGame.clients.find(c => c.clientId === clientId);
+      
+      if(!targetPlayer.symbol) return;
 
       if(checkAvailability(selectedCell)){
         board[selectedCell - 1].isSelected = true;
