@@ -15,6 +15,7 @@ const clients = {};
 const game = {};
 let winner = "";
 let turn = "";
+let gameId = "";
 let gameStatus = "stop";
 const board = 
   [
@@ -38,10 +39,15 @@ wsServer.on("request", (request) => {
     if(result.method === "start"){
       console.log("Game started");
       const clientId = result.clientId;
-      const gameId = getUniqueID();
-      game[gameId] = {
-        "id": gameId,
-        "clients": []
+
+      console.log("Start: clientId", clientId)
+      if(!gameId){
+        gameId = getUniqueID();
+
+        game[gameId] = {
+          "id": gameId,
+          "clients": []
+        }
       }
 
       const payLoad = {
@@ -55,7 +61,9 @@ wsServer.on("request", (request) => {
 
     if(result.method === "join"){
       const clientId = result.clientId;
-      const gameId = result.gameId;
+      console.log("Join: clientId", clientId)
+      // gameId = result.gameId;
+      console.log("Join: gameId", gameId)
       const activeGame = game[gameId];
 
       if(activeGame.clients.length >= 2){
@@ -67,10 +75,15 @@ wsServer.on("request", (request) => {
         turn = clientId;
       }
 
+
+
       activeGame.clients.push({
         "clientId": clientId,
         "symbol": ""
       });
+
+      console.log(activeGame.clients);
+      
 
       // Start Game if there are 2 players
       if(activeGame.clients.length === 2){
@@ -105,7 +118,7 @@ wsServer.on("request", (request) => {
     // Update Board After Player Selects Cell
     if(result.method === "playerMove"){
       const clientId = result.clientId;
-      const gameId = result.gameId;
+      // const gameId = result.gameId;
       const selectedCell = result.cellNo;
       const symbol = result.symbol;
       const activeGame = game[gameId];
@@ -116,7 +129,7 @@ wsServer.on("request", (request) => {
 
       // Check if the active player chose their symbol before making their move.
       const targetPlayer  = activeGame.clients.find(c => c.clientId === clientId);
-      
+
       if(!targetPlayer.symbol) return;
 
       if(checkAvailability(selectedCell)){
@@ -147,7 +160,7 @@ wsServer.on("request", (request) => {
     // Reset Game
     if(result.method === "reset"){
       const clientId = result.clientId;
-      const gameId = result.gameId;
+      // const gameId = result.gameId;
       const activeGame = game[gameId];
 
       const activePlayerIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
@@ -184,11 +197,16 @@ wsServer.on("request", (request) => {
     // Choose Symbol to Play Game
     if(result.method === "chooseSymbolCircle"){
       const clientId = result.clientId;
-      const gameId = result.gameId;
+      gameId = result.gameId;
       const activeGame = game[gameId];
+
+      console.log("clientId", clientId);
+      console.log(activeGame)
 
       const symbolClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
       const symbolArr = activeGame.clients.map(c => c.symbol);
+
+      console.log("symbolClientIdIndex", symbolClientIdIndex)
 
       // Check is Symbol is unused
       if(symbolArr.findIndex(symbol => symbol === "Circle") === -1){
@@ -206,11 +224,13 @@ wsServer.on("request", (request) => {
 
     if(result.method === "chooseSymbolCross"){
       const clientId = result.clientId;
-      const gameId = result.gameId;
+      gameId = result.gameId;
       const activeGame = game[gameId];
 
       const symbolClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
       const symbolArr = activeGame.clients.map(c => c.symbol);
+
+      console.log("symbolClientIdIndex", symbolClientIdIndex)
 
             // Check is Symbol is unused
             if(symbolArr.findIndex(symbol => symbol === "Cross") === -1){
