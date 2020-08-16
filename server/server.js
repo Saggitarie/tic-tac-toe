@@ -257,6 +257,8 @@ wsServer.on("request", (request) => {
     "clientId": clientId,
     "gameId": game
   }
+
+  console.log("Connected");
   connection.send(JSON.stringify(payload));
 });
 

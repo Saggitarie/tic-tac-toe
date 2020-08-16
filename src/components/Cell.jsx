@@ -69,14 +69,15 @@ export default function Cell(props){
       // <p>Symbol: {props.symbol}</p> */}
       {props.symbol === "Circle" ? 
       (<div>
-        <p>CellNo: {props.cellNo}</p>
+        {/* <p>CellNo: {props.cellNo}</p> */}
         <img className="board__cell--circle" src="/circle.svg" />
       </div>) : props.symbol === "Cross" ?
         (<div>
-          <p>CellNo: {props.cellNo}</p>
+          {/* <p>CellNo: {props.cellNo}</p> */}
           <img className="board__cell--cross"  src="/cross.svg" />  
         </div>):
-        <p>CellNo: {props.cellNo}</p>
+        null
+        // <p>CellNo: {props.cellNo}</p>
       }
     </div>
   )

@@ -3,8 +3,12 @@
 
   grid-template-rows: 200px 200px 200px;
   grid-template-columns: 200px 200px 200px;
-  // grid-gap: 6rem;
   align-items: start;
+
+  @include respond(phone) {
+    grid-template-rows: 80px 80px 80px;
+    grid-template-columns: 80px 80px 80px;
+  }
 
   &__cell {
     border: 2px solid $color-primary-dark;
@@ -16,16 +20,34 @@
     width: 200px;
     height: 200px;
 
+    @include respond(phone) {
+      width: 76px;
+      height: 76px;
+    }
+
     &--circle{
       width: 90%;
       height: 90%;
+
+
+    @include respond(phone) {
+      width: 40%;
+      height: 40%;
+    }
     }
 
     &--cross{
       width: 90%;
       height: 90%;
+
+      @include respond(phone) {
+        width: 40%;
+        height: 40%;
+      }
     }
   }
+
+  
 }
 
 .board__cell{

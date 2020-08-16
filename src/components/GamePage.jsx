@@ -52,15 +52,15 @@ export default function GamePage(){
     } else {
       if(isWinner === 1){
         return (
-        <div className="gamepage__winner-message">You are the winner</div>
+        <div className="gamepage__winner-message u-margin-top-medium">You are the winner</div>
         )
       } else if(isWinner === 2) {
         return (
-        <div className="gamepage__winner-message">You lost :( Try Again By Pressing Reset Button</div>
+        <div className="gamepage__winner-message u-margin-top-medium">You lost :( Try Again By Pressing Reset Button</div>
         )
       } else {
         return (
-          <div className="gamepage__winner-message">Draw! Try Again By Pressing Reset Button</div>
+          <div className="gamepage__winner-message u-margin-top-medium">Draw! Try Again By Pressing Reset Button</div>
         )
       }
     }
@@ -144,14 +144,14 @@ export default function GamePage(){
 
   return (
     <div className="gamepage u-center-text">
-      <div className="gamepage__exit" onClick={exitGame}>
+      {/* <div className="gamepage__exit" onClick={exitGame}>
         <figure className="gamepage__exit__group u-margin-top-tiny">
             <img src="/logout.svg" alt="Exit Icon" className="gamepage__exit__group--img" />
             <figcaption className="gamepage__exit__group--text">Exit</figcaption>
         </figure>
-      </div>
+      </div> */}
       {validateWinner()}
-      {!symbol ? <div className="gamepage__warning">Choose your symbol before playing</div>: null}
+      {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div>: null}
       <div className="gamepage__symbol u-margin-top-tiny">
         <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
           <div className="gamepage__symbol__circle--icon" >○</div>
@@ -166,7 +166,7 @@ export default function GamePage(){
         <GameBoard board={boardInfo} />
       </div>
 
-      {isWinner !== 0 ? <div className="btn-reset u-margin-super-tiny btn-text " onClick={resetGame}>RESET</div>:<div></div>}
+      {isWinner !== 0 ? <div className="btn-reset u-margin-super-tiny btn-text" onClick={resetGame}>RESET</div>:<div></div>}
     </div>
   )
 }
