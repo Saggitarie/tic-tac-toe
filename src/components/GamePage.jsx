@@ -215,6 +215,28 @@ export default function GamePage(){
     }
   }
 
+  function renderSymbolMessage(){
+    if(!symbol){
+      return (
+        <div className="gamepage__warning u-margin-top-medium">
+          Choose your symbol before playing
+        </div>
+      )
+    } else if(symbol && symbol === "Circle"){
+      return (
+        <div className="gamepage__warning u-margin-top-big">
+          You chose Circle
+        </div>
+      )
+    } else {
+      return (
+        <div className="gamepage__warning u-margin-top-big">
+          You chose Cross
+        </div>
+      )
+    }
+  }
+
   return (
     <div className="gamepage u-center-text">
       <div className="gamepage__exit" onClick={exitGame}>
@@ -224,7 +246,8 @@ export default function GamePage(){
         </figure>
       </div>
       {validateWinner()}
-      {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div> : symbol && symbol === "Circle"? <div className="gamepage__warning u-margin-top-big">You chose Circle</div> : <div className="gamepage__warning u-margin-top-big">You chose Cross</div>}
+      {/* {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div> : symbol && symbol === "Circle"? <div className="gamepage__warning u-margin-top-big">You chose Circle</div> : <div className="gamepage__warning u-margin-top-big">You chose Cross</div>} */}
+      {renderSymbolMessage()}
       {checkPlayerTurn()}
       <div className="gamepage__board">
         <GameBoard board={boardInfo} />
