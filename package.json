@@ -21,7 +21,7 @@
     "heroku-postbuild": "yarn && yarn build",
     "start-clientdev": "react-scripts start",
     "start-serverdev": "node server/server.js",
-    "run-all": "concurrently \"yarn start-clientdev\" \"yarn start-clientdev\"",
+    "run-all": "concurrently \"yarn start-serverdev\" \"yarn start-clientdev\"",
     "build": "CI= react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
