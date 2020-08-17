@@ -14,32 +14,32 @@ export default function GamePage(){
           isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
 
   useEffect(() => {
-
-    console.log("Triggered");
-
-    const payLoad = {
-      "method": "initializeBoard",
-      "clientId": clientId,
-    }
-
-    websocket.current.send(JSON.stringify(payLoad));
-
-    websocket.current.onmessage = (message) => {
-      const response = JSON.parse(message.data);
-
-      if(response.method === "initializeBoard" ){
-        setBoardInfo(response.board);
+    if(websocket === null){
+      history.push("/");
+    } else {
+      const payLoad = {
+        "method": "initializeBoard",
+        "clientId": clientId,
       }
-
-      if(response.method === "update"){
-        setBoardInfo(response.board);
-        isWinnerCheck(0);
-      }
-
-
-
-      if(response.method === "chooseSymbolCircle" || response.method === "chooseSymbolCross"){
-        setSymbol(response.symbol);
+  
+      websocket.current.send(JSON.stringify(payLoad));
+  
+  
+      websocket.current.onmessage = (message) => {
+        const response = JSON.parse(message.data);
+  
+        if(response.method === "initializeBoard" ){
+          setBoardInfo(response.board);
+        }
+  
+        if(response.method === "update"){
+          setBoardInfo(response.board);
+          isWinnerCheck(0);
+        }
+  
+        if(response.method === "chooseSymbolCircle" || response.method === "chooseSymbolCross"){
+          setSymbol(response.symbol);
+        }
       }
     }
   }, [symbol]);

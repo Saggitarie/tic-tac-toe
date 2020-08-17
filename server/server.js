@@ -11,8 +11,8 @@ const wsServer = new webSocketServer({
   httpServer: server
 });
 
-const clients = {};
-const game = {};
+let clients = {};
+let game = {};
 let winner = "";
 let turn = "";
 let gameId = "";
@@ -33,12 +33,31 @@ const board =
 wsServer.on("request", (request) => {
   const connection = request.accept(null, request.origin);
 
+  connection.on("close", message => {
+    console.log("Game closed");
+
+    clients = {};
+    game = {};
+    winner = "";
+    turn = "";
+    gameId = "";
+    gameStatus = "stop";
+
+    for(cell of board){
+      cell["isSelected"] = false;
+      cell["clientId"] = "";
+      cell["symbol"] = "";
+    }
+  })
+
   connection.on("message", message => {
     const result = JSON.parse(message.utf8Data);
 
     if(result.method === "start"){
       console.log("Game started");
       const clientId = result.clientId;
+
+      if(!clientId) return;
 
       if(!gameId){
         gameId = getUniqueID();
@@ -53,6 +72,10 @@ wsServer.on("request", (request) => {
         "method": "start",
         "game": game[gameId]
       }
+
+      console.log("ClientId >>>",clientId);
+
+      if(!clients[clientId]) return;
 
       const con = clients[clientId].connection;
       con.send(JSON.stringify(payLoad));
@@ -213,11 +236,18 @@ wsServer.on("request", (request) => {
       const clientId = result.clientId;
       const activeGame = game[gameId];
 
+      console.log("clientId>>>>>", clientId);
+      console.log("activeGame", activeGame);
+
       const symbolClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
+      console.log("symbolClientIdIndex>>>>>", symbolClientIdIndex);
       const symbolArr = activeGame.clients.map(c => c.symbol);
+
+      console.log("symbolArr>>>>>", symbolArr);
 
       // Check is Symbol is unused
       if(symbolArr.findIndex(symbol => symbol === "Circle") === -1){
+        // if(!activeGame.clients[symbolClientIdIndex]) return;
         activeGame.clients[symbolClientIdIndex].symbol = "Circle";
 
         const payLoad = {
@@ -234,11 +264,14 @@ wsServer.on("request", (request) => {
       const clientId = result.clientId;
       const activeGame = game[gameId];
 
+      if(!clientId) return;
+
       const symbolClientIdIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
       const symbolArr = activeGame.clients.map(c => c.symbol);
 
       // Check is Symbol is unused
       if(symbolArr.findIndex(symbol => symbol === "Cross") === -1){
+        
         activeGame.clients[symbolClientIdIndex].symbol = "Cross";
 
         const payLoad = {
