@@ -144,14 +144,14 @@ export default function GamePage(){
 
   return (
     <div className="gamepage u-center-text">
-      {/* <div className="gamepage__exit" onClick={exitGame}>
+      <div className="gamepage__exit" onClick={exitGame}>
         <figure className="gamepage__exit__group u-margin-top-tiny">
             <img src="/logout.svg" alt="Exit Icon" className="gamepage__exit__group--img" />
             <figcaption className="gamepage__exit__group--text">Exit</figcaption>
         </figure>
-      </div> */}
+      </div>
       {validateWinner()}
-      {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div>: null}
+      {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div>: <div className="gamepage__warning u-margin-top-big"></div>}
       <div className="gamepage__symbol u-margin-top-tiny">
         <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
           <div className="gamepage__symbol__circle--icon" >○</div>
