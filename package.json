@@ -21,7 +21,6 @@
     "start-clientdev": "react-scripts start",
     "start-serverdev": "node server/server.js",
     "run-all": "concurrently \"yarn dev\" \"yarn start\"",
-    "build": "CI= react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
