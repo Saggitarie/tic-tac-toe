@@ -33,6 +33,8 @@ const board =
 wsServer.on("request", (request) => {
   const connection = request.accept(null, request.origin);
 
+  console.log("connection", connection);
+
   connection.on("close", message => {
     console.log("Game closed");
 
@@ -271,7 +273,7 @@ wsServer.on("request", (request) => {
 
       // Check is Symbol is unused
       if(symbolArr.findIndex(symbol => symbol === "Cross") === -1){
-        
+
         activeGame.clients[symbolClientIdIndex].symbol = "Cross";
 
         const payLoad = {
