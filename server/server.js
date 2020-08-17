@@ -188,10 +188,12 @@ wsServer.on("request", (request) => {
 
       const activePlayerIndex = activeGame.clients.findIndex(c => c.clientId === clientId);
 
-      if(activePlayerIndex === 0){
-        turn = activeGame.clients[1].clientId;
-      }else{
+      if(activePlayerIndex === 1){
+        console.log("active clients>>>>", activeGame.clients);
         turn = activeGame.clients[0].clientId;
+      }else{
+        console.log("active clients>>>>", activeGame.clients);
+        turn = activeGame.clients[1].clientId;
       }
 
       winner = "";
