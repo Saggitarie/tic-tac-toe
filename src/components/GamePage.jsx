@@ -156,7 +156,7 @@ export default function GamePage(){
       </div>
       {validateWinner()}
       {console.log("Symbol????", symbol)}
-      {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div>: <div className="gamepage__warning u-margin-top-big"></div>}
+      {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div> : symbol && symbol === "Circle"? <div className="gamepage__warning u-margin-top-big">You chose Circle</div> : <div className="gamepage__warning u-margin-top-big">You chose Cross</div>}
       <div className="gamepage__symbol u-margin-top-tiny">
         <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
           <div className="gamepage__symbol__circle--icon" >○</div>

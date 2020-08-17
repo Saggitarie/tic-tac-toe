@@ -14,7 +14,8 @@ export default function MainPage(){
   const client = useRef(null);
 
   useEffect(() => {
-    client.current = new WebSocket('wss://tic-tac-toe-app-2.herokuapp.com/');
+    // client.current = new WebSocket('wss://tic-tac-toe-app-2.herokuapp.com/');
+    client.current = new WebSocket('ws://localhost:8000');
     setWebSocket(client);
 
     client.current.onmessage = (message) => {
