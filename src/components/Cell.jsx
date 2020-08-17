@@ -71,21 +71,14 @@ export default function Cell(props){
 
   return (
     <div onClick={onSelectCell} className="board__cell">
-      {/* <p>CellNo: {props.cellNo}</p>
-      // <p>IsSelected: {String(props.isSelected)}</p>
-      // <p>ClientId: {props.clientId}</p>
-      // <p>Symbol: {props.symbol}</p> */}
       {props.symbol === "Circle" ? 
       (<div>
-        {/* <p>CellNo: {props.cellNo}</p> */}
         <img className="board__cell--circle" src="/circle.svg" />
       </div>) : props.symbol === "Cross" ?
         (<div>
-          {/* <p>CellNo: {props.cellNo}</p> */}
           <img className="board__cell--cross"  src="/cross.svg" />  
         </div>):
         null
-        // <p>CellNo: {props.cellNo}</p>
       }
     </div>
   )
