@@ -14,7 +14,7 @@ export default function MainPage(){
   const client = useRef(null);
 
   useEffect(() => {
-    client.current = new WebSocket('wss://zen-goldberg-b98cb8.netlify.app/');
+    client.current = new WebSocket('wss://tic-tac-toe-app-2.herokuapp.com/');
     setWebSocket(client);
 
     client.current.onmessage = (message) => {
