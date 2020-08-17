@@ -14,7 +14,7 @@ export default function MainPage(){
   const client = useRef(null);
 
   useEffect(() => {
-    client.current = new WebSocket('ws://localhost:8000');
+    client.current = new WebSocket('ws://zen-goldberg-b98cb8.netlify.app/');
     setWebSocket(client);
 
     client.current.onmessage = (message) => {
