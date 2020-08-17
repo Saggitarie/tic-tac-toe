@@ -67,9 +67,11 @@ wsServer.on("request", (request) => {
         return null;
       }
 
+      console.log("Turn Check>>>");
       if(!turn){
         turn = clientId;
       }
+      console.log("Turn Check Passed >>>", turn);
 
       activeGame.clients.push({
         "clientId": clientId,
@@ -81,7 +83,7 @@ wsServer.on("request", (request) => {
 
       // Start Game if there are 2 players
       if(activeGame.clients.length === 2){
-        console.log("Two Players!");
+        console.log("Two Players! To Play Game");
         gameStatus = "running";
         updateGameState();
       }
@@ -116,8 +118,12 @@ wsServer.on("request", (request) => {
       const symbol = result.symbol;
       const activeGame = game[gameId];
 
+      console.log("PlayerMove GameStatus Check Start")
       if(gameStatus === "stop") return;
+      console.log("PlayerMove GameStatus Check Finished >>> Running")
 
+      console.log("Player >>>>", clientId);
+      console.log("Your turn??>>>>>", turn);
       if(turn !== clientId) return;
 
       // Check if the active player chose their symbol before making their move.

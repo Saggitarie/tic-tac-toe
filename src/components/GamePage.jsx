@@ -42,7 +42,7 @@ export default function GamePage(){
         setSymbol(response.symbol);
       }
     }
-  }, []);
+  }, [symbol]);
 
   function validateWinner(){
     if(isWinner === 0){
@@ -52,7 +52,7 @@ export default function GamePage(){
     } else {
       if(isWinner === 1){
         return (
-        <div className="gamepage__winner-message u-margin-top-medium">You are the winner</div>
+        <div className="gamepage__winner-message u-margin-top-medium">You are the winner :) Reset to Try Again!</div>
         )
       } else if(isWinner === 2) {
         return (
@@ -73,6 +73,8 @@ export default function GamePage(){
       "gameId": gameId
     }
 
+    isWinnerCheck(0);
+
     websocket.current.send(JSON.stringify(payLoad));
 
     websocket.current.onmessage = (message) => {
@@ -92,6 +94,8 @@ export default function GamePage(){
       "gameId": gameId
     }
     websocket.current.send(JSON.stringify(payLoad));
+
+    setSymbol("");
 
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
@@ -151,6 +155,7 @@ export default function GamePage(){
         </figure>
       </div>
       {validateWinner()}
+      {console.log("Symbol????", symbol)}
       {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div>: <div className="gamepage__warning u-margin-top-big"></div>}
       <div className="gamepage__symbol u-margin-top-tiny">
         <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
