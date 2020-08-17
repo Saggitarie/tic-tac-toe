@@ -147,11 +147,6 @@ export default function GamePage(){
   }
 
   function checkPlayerTurn(){
-    if(isPlayerTurn){
-
-    } else {
-
-    }
     if(symbol === "Circle" && isPlayerTurn){
       return (
       <div className="gamepage__symbol u-margin-top-tiny">
