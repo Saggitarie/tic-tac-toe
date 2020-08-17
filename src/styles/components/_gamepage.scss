@@ -1,0 +1,133 @@
+.gamepage {
+  &__exit {
+    padding-left: 1rem;
+    &__group {
+      width: 10rem;
+      height: 4rem;
+      border-radius: .5rem;
+      padding: .5rem;
+  
+      background-color: $color-white;
+  
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &--img {
+        width: 3rem;
+      }
+  
+      &--text {
+        font-size: 2.4rem;
+        font-family: 'Courgette', cursive;
+        color: $color-quinary;
+      }
+    }
+  }
+
+  &__warning {
+    font-size: 2.5rem;
+    font-family: 'Courgette', cursive;
+    color: $color-quinary;
+
+    @include respond(phone) {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__winner-message{
+    font-size: 2.5rem;
+    font-family: 'Courgette', cursive;
+    color: $color-quinary;
+  }
+
+  &__board {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__symbol {
+    display: flex;
+    justify-content: space-evenly;
+
+    &__circle {
+      display: flex;
+      align-items: center;
+      width: 16rem;
+      border-radius: .5rem;
+      background-color: $color-white;
+      justify-content: space-around;
+      border: 1px solid $color-primary-dark;
+
+      cursor: pointer;
+
+      @include respond(phone) {
+        width: 12rem;
+        align-items: center;
+        padding: 1rem;
+      }
+
+      &:hover {
+        background-color: $color-primary-dark;
+      }
+
+      &--icon{
+        font-size: 3.5rem;
+
+        @include respond(phone) {
+          font-size: 1.5rem;
+        }
+      }
+      &--text{
+        font-size: 2.5rem;
+        font-family: 'Courgette', cursive;
+        color: $color-quinary;
+
+        @include respond(phone) {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    &__cross {
+      display: flex;
+      align-items: baseline;
+      width: 16rem;
+      border-radius: .5rem;
+      background-color: $color-white;
+      justify-content: space-around;
+      border: 1px solid $color-primary-dark;
+      padding-bottom: .7rem;
+
+      cursor: pointer;
+
+      @include respond(phone) {
+        padding-bottom:0;
+        padding: 1rem;
+        width: 12rem;
+        align-items: baseline;
+      }
+
+      &:hover {
+        background-color: $color-primary-dark;
+      }
+
+      &--icon{
+        font-size: 2.5rem;
+
+        @include respond(phone) {
+          font-size: 1.5rem;
+        }
+      }
+
+      &--text{
+        font-size: 2.5rem;
+        font-family: 'Courgette', cursive;
+        color: $color-quinary;
+
+        @include respond(phone) {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}
