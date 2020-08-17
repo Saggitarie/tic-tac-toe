@@ -4,12 +4,17 @@ import {WSContext} from "../context/WSState";
 import "../styles/main.scss";
 
 export default function Cell(props){
-  const {websocket, clientId, gameId, isWinner, symbol,
+  const {websocket, clientId, gameId, isWinner, symbol, checkPlayerTurn,
          boardInfo, setBoardInfo, isWinnerCheck} = useContext(WSContext);
 
   useEffect(() => {
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
+
+      console.log("Turn>>>>>", response.turn);
+      console.log("This Client >>>>", clientId);
+
+      checkPlayerTurn(response.turn === clientId);
 
       if(response.method === "update"){
         setBoardInfo(response.board);
@@ -42,6 +47,9 @@ export default function Cell(props){
 
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
+
+      console.log("Turn>>>>>", response.turn);
+      console.log("This Client >>>>", clientId);
 
       if(response.method === "update"){
         setBoardInfo(response.board);

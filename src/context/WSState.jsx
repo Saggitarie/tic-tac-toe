@@ -6,6 +6,7 @@ import {
   SET_WEBSOCKET,
   SET_BOARD_INFO,
   SET_SYMBOL,
+  IS_PLAYERS_TURN,
   HAS_ACTIVE_GAME,
   IS_WINNER 
 } from "./WSTypes";
@@ -15,6 +16,7 @@ const initialState = {
   gameId: "",
   boardInfo: [],
   symbol: "",
+  isPlayerTurn: false,
   websocket: null,
   hasActiveGame: false,
   isWinner: 0
@@ -76,6 +78,13 @@ export const WSProvider = ({children}) => {
     })
   }
 
+  function checkPlayerTurn(bool){
+    dispatch({
+      type: IS_PLAYERS_TURN,
+      payload: bool
+    });
+  }
+
   return (
     <WSContext.Provider value={{
       clientId: state.clientId,
@@ -83,6 +92,7 @@ export const WSProvider = ({children}) => {
       websocket: state.websocket,
       boardInfo: state.boardInfo,
       symbol: state.symbol,
+      isPlayerTurn: state.isPlayerTurn,
       hasActiveGame: state.hasActiveGame,
       isWinner: state.isWinner,
       setClientId,
@@ -90,6 +100,7 @@ export const WSProvider = ({children}) => {
       setWebSocket,
       setBoardInfo,
       setSymbol,
+      checkPlayerTurn,
       isWinnerCheck,
       toggleActiveGameState
     }}>
