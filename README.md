@@ -1,68 +1,64 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Tic Tac Toe
 
-## Available Scripts
+A two player game that can be played by two players against each other on separate devices.
 
-In the project directory, you can run:
+## Deployment URL
 
-### `yarn start`
+### URL of the Deployed version of this App
 
-Runs the app in the development mode.<br />
+<https://zen-goldberg-b98cb8.netlify.app/>
+
+## SETUP
+
+**I recommend using the _deployed version of the app_ for testing the mobile version of this tic-tac-toe game. It seems like the onClick event for react app doesn't work well by connecting iphone to the local ip address running on macbook.**
+
+You will have to go through the following steps in order to test this app on your local environment.
+
+
+
+####  In your terminal, run the following commands:
+
+##### 1. Run `yarn` in your terminal.
+If you don't have yarn, install it from [here](https://classic.yarnpkg.com/en/docs/install/#mac-stable))
+
+##### 2. Comment out the following line in MainPage.jsx
+
+`    client.current = new WebSocket('wss://tic-tac-toe-app-2.herokuapp.com/');`
+
+and put the following line back
+`    // client.current = new WebSocket('ws://localhost:8000')`
+
+##### 3. Run `yarn run-all` in your terminal
+
+##### 4. Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Instruction for Testing the App
 
-### `yarn test`
+### (I) Create and Join Game
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+With **Device A / Tab A on browser**, access to the deployed url above or to [http://localhost:3000](http://localhost:3000). 
 
-### `yarn build`
+Press the Create Game button to create game. The button will re-render to become Join Game button. Click it again to navigate to the game page.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+With **Device B / Tab B on browser**, access to the same url. You should see Join Game button instead of Create Game button, since the game is already created by another player. Click the button to join game.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### (II) Play Game
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+With two players in the game, you can start your match. 
+Click on the symbol you want to use in order to start your game. If the symbol is already selected by your opponent, you shouldn't be able to select them.
 
-### `yarn eject`
+Once the symbols are selected by both sides, the game begins.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+At the end of each match, you should be able to see the result above the game board. The message should be the following three patterns:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### You are the winner :) Reset to Try Again!
+#### You lost :( Try Again By Pressing Reset Button
+#### Draw! Try Again By Pressing Reset Button
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### (III) Another Match
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Whenever you want to go for another round, you can always press the reset button. It should refresh the game board. Both sides needs to press the reset button before starting the next game.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### (IV) Leave Room
+If you are satisfied with the game, you can always leave the room by pressing the **EXIT** button on the top-left hand side. 

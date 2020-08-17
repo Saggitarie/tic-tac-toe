@@ -75,7 +75,7 @@ export default function MainPage(){
         {
         hasActiveGame 
         ? <div className="btn btn-text" onClick={onJoinGameClick}>JOIN GAME</div>
-        : <div className="btn btn-text" onClick={onStartGameClick}>START GAME</div>
+        : <div className="btn btn-text" onClick={onStartGameClick}>CREATE GAME</div>
         } 
       </div>
     </div>

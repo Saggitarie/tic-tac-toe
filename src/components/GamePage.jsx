@@ -224,18 +224,7 @@ export default function GamePage(){
         </figure>
       </div>
       {validateWinner()}
-      {console.log("Symbol????", symbol)}
       {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div> : symbol && symbol === "Circle"? <div className="gamepage__warning u-margin-top-big">You chose Circle</div> : <div className="gamepage__warning u-margin-top-big">You chose Cross</div>}
-      {/* <div className="gamepage__symbol u-margin-top-tiny">
-        <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
-          <div className="gamepage__symbol__circle--icon" >○</div>
-          <p className="gamepage__symbol__circle--text">Circle</p>
-        </div>
-        <div className="gamepage__symbol__cross" onClick={chooseSymbolCross}>
-          <div className="gamepage__symbol__cross--icon" >×</div>
-          <p className="gamepage__symbol__cross--text">Cross</p>
-        </div>
-      </div> */}
       {checkPlayerTurn()}
       <div className="gamepage__board">
         <GameBoard board={boardInfo} />
