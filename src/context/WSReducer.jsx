@@ -10,6 +10,8 @@ export default (state, action) => {
       return {...state, boardInfo: action.payload};
     case "SET_SYMBOL":
       return {...state, symbol: action.payload};
+    case "IS_PLAYERS_TURN":
+      return {...state, isPlayerTurn: action.payload}
     case "IS_WINNER":
       return {...state, isWinner: action.payload}
     case "HAS_ACTIVE_GAME":

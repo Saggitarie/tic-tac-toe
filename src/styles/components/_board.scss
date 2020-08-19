@@ -1,6 +1,5 @@
 .board {
   display: grid;
-
   grid-template-rows: 200px 200px 200px;
   grid-template-columns: 200px 200px 200px;
   align-items: start;
@@ -34,7 +33,7 @@
       width: 40%;
       height: 40%;
     }
-    }
+  }
 
     &--cross{
       width: 90%;
@@ -46,10 +45,4 @@
       }
     }
   }
-
-  
-}
-
-.board__cell{
-
 }

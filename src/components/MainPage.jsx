@@ -14,8 +14,8 @@ export default function MainPage(){
   const client = useRef(null);
 
   useEffect(() => {
-    // client.current = new WebSocket('wss://tic-tac-toe-app-2.herokuapp.com/');
-    client.current = new WebSocket('ws://localhost:8000');
+    client.current = new WebSocket('wss://tic-tac-toe-app-2.herokuapp.com/');
+    // client.current = new WebSocket('ws://localhost:8000');
     setWebSocket(client);
 
     client.current.onmessage = (message) => {
@@ -75,7 +75,7 @@ export default function MainPage(){
         {
         hasActiveGame 
         ? <div className="btn btn-text" onClick={onJoinGameClick}>JOIN GAME</div>
-        : <div className="btn btn-text" onClick={onStartGameClick}>START GAME</div>
+        : <div className="btn btn-text" onClick={onStartGameClick}>CREATE GAME</div>
         } 
       </div>
     </div>

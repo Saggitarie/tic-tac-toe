@@ -10,7 +10,7 @@ import "../styles/main.scss"
 export default function GamePage(){
   const history = useHistory();
 
-  const { websocket, clientId, gameId, symbol, setSymbol, isWinnerCheck,
+  const { websocket, clientId, gameId, symbol, setSymbol, isWinnerCheck, isPlayerTurn,
           isWinner, boardInfo, setBoardInfo} = useContext(WSContext);
 
   useEffect(() => {
@@ -146,17 +146,61 @@ export default function GamePage(){
     }
   }
 
-  return (
-    <div className="gamepage u-center-text">
-      <div className="gamepage__exit" onClick={exitGame}>
-        <figure className="gamepage__exit__group u-margin-top-tiny">
-            <img src="/logout.svg" alt="Exit Icon" className="gamepage__exit__group--img" />
-            <figcaption className="gamepage__exit__group--text">Exit</figcaption>
-        </figure>
+  function checkPlayerTurn(){
+    if(symbol === "Circle" && isPlayerTurn){
+      return (
+      <div className="gamepage__symbol u-margin-top-tiny">
+        <div className="gamepage__symbol__circle gamepage__symbol__circle--active" onClick={chooseSymbolCircle}>
+          <div className="gamepage__symbol__circle--icon" >○</div>
+          <p className="gamepage__symbol__circle--text">Circle</p>
+        </div>
+        <div className="gamepage__symbol__cross" onClick={chooseSymbolCross}>
+          <div className="gamepage__symbol__cross--icon" >×</div>
+          <p className="gamepage__symbol__cross--text">Cross</p>
+        </div>
       </div>
-      {validateWinner()}
-      {console.log("Symbol????", symbol)}
-      {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div> : symbol && symbol === "Circle"? <div className="gamepage__warning u-margin-top-big">You chose Circle</div> : <div className="gamepage__warning u-margin-top-big">You chose Cross</div>}
+      )
+    } else if(symbol === "Circle" && !isPlayerTurn){
+      return (
+          <div className="gamepage__symbol u-margin-top-tiny">
+            <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
+              <div className="gamepage__symbol__circle--icon" >○</div>
+              <p className="gamepage__symbol__circle--text">Circle</p>
+            </div>
+            <div className="gamepage__symbol__cross gamepage__symbol__cross--active" onClick={chooseSymbolCross}>
+              <div className="gamepage__symbol__cross--icon" >×</div>
+              <p className="gamepage__symbol__cross--text">Cross</p>
+            </div>
+          </div>
+      )
+    } else if(symbol === "Cross" && isPlayerTurn){
+      return (
+      <div className="gamepage__symbol u-margin-top-tiny">
+        <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
+          <div className="gamepage__symbol__circle--icon" >○</div>
+          <p className="gamepage__symbol__circle--text">Circle</p>
+        </div>
+        <div className="gamepage__symbol__cross gamepage__symbol__cross--active" onClick={chooseSymbolCross}>
+          <div className="gamepage__symbol__cross--icon" >×</div>
+          <p className="gamepage__symbol__cross--text">Cross</p>
+        </div>
+      </div>
+      )
+    } else if(symbol === "Cross" && !isPlayerTurn){
+      return (
+      <div className="gamepage__symbol u-margin-top-tiny">
+        <div className="gamepage__symbol__circle gamepage__symbol__circle--active" onClick={chooseSymbolCircle}>
+          <div className="gamepage__symbol__circle--icon" >○</div>
+          <p className="gamepage__symbol__circle--text">Circle</p>
+        </div>
+        <div className="gamepage__symbol__cross " onClick={chooseSymbolCross}>
+          <div className="gamepage__symbol__cross--icon" >×</div>
+          <p className="gamepage__symbol__cross--text">Cross</p>
+        </div>
+      </div>
+      )
+    } else {
+      return (
       <div className="gamepage__symbol u-margin-top-tiny">
         <div className="gamepage__symbol__circle" onClick={chooseSymbolCircle}>
           <div className="gamepage__symbol__circle--icon" >○</div>
@@ -167,6 +211,44 @@ export default function GamePage(){
           <p className="gamepage__symbol__cross--text">Cross</p>
         </div>
       </div>
+      )
+    }
+  }
+
+  function renderSymbolMessage(){
+    if(!symbol){
+      return (
+        <div className="gamepage__warning u-margin-top-medium">
+          Choose your symbol before playing
+        </div>
+      )
+    } else if(symbol && symbol === "Circle"){
+      return (
+        <div className="gamepage__warning u-margin-top-big">
+          You chose Circle
+        </div>
+      )
+    } else {
+      return (
+        <div className="gamepage__warning u-margin-top-big">
+          You chose Cross
+        </div>
+      )
+    }
+  }
+
+  return (
+    <div className="gamepage u-center-text">
+      <div className="gamepage__exit" onClick={exitGame}>
+        <figure className="gamepage__exit__group u-margin-top-tiny">
+            <img src="/logout.svg" alt="Exit Icon" className="gamepage__exit__group--img" />
+            <figcaption className="gamepage__exit__group--text">Exit</figcaption>
+        </figure>
+      </div>
+      {validateWinner()}
+      {/* {!symbol ? <div className="gamepage__warning u-margin-top-medium">Choose your symbol before playing</div> : symbol && symbol === "Circle"? <div className="gamepage__warning u-margin-top-big">You chose Circle</div> : <div className="gamepage__warning u-margin-top-big">You chose Cross</div>} */}
+      {renderSymbolMessage()}
+      {checkPlayerTurn()}
       <div className="gamepage__board">
         <GameBoard board={boardInfo} />
       </div>

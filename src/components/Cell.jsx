@@ -4,12 +4,17 @@ import {WSContext} from "../context/WSState";
 import "../styles/main.scss";
 
 export default function Cell(props){
-  const {websocket, clientId, gameId, isWinner, symbol,
+  const {websocket, clientId, gameId, isWinner, symbol, checkPlayerTurn,
          boardInfo, setBoardInfo, isWinnerCheck} = useContext(WSContext);
 
   useEffect(() => {
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
+
+      console.log("Turn>>>>>", response.turn);
+      console.log("This Client >>>>", clientId);
+
+      checkPlayerTurn(response.turn === clientId);
 
       if(response.method === "update"){
         setBoardInfo(response.board);
@@ -43,6 +48,9 @@ export default function Cell(props){
     websocket.current.onmessage = (message) => {
       const response = JSON.parse(message.data);
 
+      console.log("Turn>>>>>", response.turn);
+      console.log("This Client >>>>", clientId);
+
       if(response.method === "update"){
         setBoardInfo(response.board);
 
@@ -63,21 +71,14 @@ export default function Cell(props){
 
   return (
     <div onClick={onSelectCell} className="board__cell">
-      {/* <p>CellNo: {props.cellNo}</p>
-      // <p>IsSelected: {String(props.isSelected)}</p>
-      // <p>ClientId: {props.clientId}</p>
-      // <p>Symbol: {props.symbol}</p> */}
       {props.symbol === "Circle" ? 
       (<div>
-        {/* <p>CellNo: {props.cellNo}</p> */}
         <img className="board__cell--circle" src="/circle.svg" />
       </div>) : props.symbol === "Cross" ?
         (<div>
-          {/* <p>CellNo: {props.cellNo}</p> */}
           <img className="board__cell--cross"  src="/cross.svg" />  
         </div>):
         null
-        // <p>CellNo: {props.cellNo}</p>
       }
     </div>
   )
